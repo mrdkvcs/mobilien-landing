@@ -525,7 +525,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-2 mb-4 md:mb-0">
               <img
-                src="/favicon.png"
+                src="/mobilien5.png"
                 width={50}
                 height={50}
                 alt="MobiShare Logo"
@@ -543,7 +543,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="text-[#D9E2E9]/70 text-sm">
-              © {new Date().getFullYear()} MobiShare. Minden jog fenntartva.
+              © {new Date().getFullYear()} Mobilien. Minden jog fenntartva.
             </div>
           </div>
         </div>
