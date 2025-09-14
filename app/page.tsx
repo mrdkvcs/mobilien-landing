@@ -68,7 +68,7 @@ export default function Home() {
               height={50}
               alt="MobiShare Logo"
             />
-            <span className="text-xl font-bold text-[#0C1D32]">MobiShare</span>
+            <span className="text-xl font-bold text-[#0C1D32]">Mobilien</span>
           </div>
           <nav className="hidden md:flex items-center  gap-6">
             <button
