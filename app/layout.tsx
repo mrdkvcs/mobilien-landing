@@ -7,8 +7,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MobiShare - All-in-One EV Töltési Megoldás Magyarországon",
-  icons: "/favicon.png",
+  title: "Mobilien - All-in-One EV Töltési Megoldás Magyarországon",
+  icons: "/mobilien5.png",
   description:
     "Érje el az összes töltőállomást Magyarországon egyetlen alkalmazással. Valós idejű adatok, megbízható információk és MI-alapú asszisztencia.",
   generator: "v0.dev",
@@ -36,4 +36,3 @@ export default function RootLayout({
 }
 
 import "./globals.css";
-
