@@ -113,6 +113,7 @@ export default function Home() {
                 alkalmazással. Valós idejű adatok, megbízható információk és
                 MI-alapú asszisztencia, valamint egy árérzékeny fogyasztóknak 
                 kedvező dinamikus árazási modell.
+              
                 
               </p>
               <div className="flex flex-col sm:flex-row gap-4">

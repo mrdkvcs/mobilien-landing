@@ -144,9 +144,9 @@ export default function PrivacyPolicy() {
               kapcsolatot:
             </p>
             <p className="mb-6">
-              Email: privacy@mobishare.hu
+              Email: info@mobilien.hu
               <br />
-              Cím: 1234 Budapest, Példa utca 123.
+              Cím: 1021 Budapest, Budakeszi Út
             </p>
 
             <h2 className="text-2xl font-bold text-[#0C1D32] mt-8 mb-4">
