@@ -111,7 +111,9 @@ export default function Home() {
               <p className="text-lg text-[#0C1D32]/80 max-w-md">
                 Érje el az összes töltőállomást Magyarországon egyetlen
                 alkalmazással. Valós idejű adatok, megbízható információk és
-                MI-alapú asszisztencia.
+                MI-alapú asszisztencia, valamint egy árérzékeny fogyasztóknak 
+                kedvező dinamikus árazási modell.
+                
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
