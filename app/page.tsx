@@ -519,7 +519,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="py-8 bg-[#0C1D32] border-t border-[#007AAD]/20">
         <div className="container">
           <div className="flex flex-col md:flex-row justify-between items-center">
@@ -530,9 +529,7 @@ export default function Home() {
                 height={50}
                 alt="MobiShare Logo"
               />
-              <span className="text-lg font-bold text-[#FFFBFC]">
-                MobiShare
-              </span>
+              <span className="text-lg font-bold text-[#FFFBFC]">Mobilien</span>
             </div>
             <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 mb-4 md:mb-0">
               <Link
