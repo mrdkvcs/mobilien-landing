@@ -63,7 +63,7 @@ export default function Home() {
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
             <img
-              src="/favicon.png"
+              src="/mobilien5.png"
               width={50}
               height={50}
               alt="MobiShare Logo"
