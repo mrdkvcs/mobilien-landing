@@ -135,7 +135,8 @@ export default function RolunkPage() {
                 {/* <img src="/vezetok/babjak-sandor.jpg" alt="Babják Sándor" className="object-cover w-full h-full" /> */}
               </div>
               <div className="text-lg font-semibold text-[#0C1D32] mb-1">Babják Sándor</div>
-              <div className="text-sm text-[#007AAD] text-center">CEO / Ügyvezető</div>
+              <div className="text-sm font-medium text-[#007AAD] text-center">CEO / Ügyvezető</div>
+              <div className="text-xs font-mono text-[#0C1D32] mt-1 break-all">babjaksandor@mobilien.hu</div>
             </div>
             {/* 2. vezető */}
             <div className="flex flex-col items-center">
@@ -143,7 +144,8 @@ export default function RolunkPage() {
                 {/* <img src="/vezetok/anstead-adam.jpg" alt="Anstead Ádám" className="object-cover w-full h-full" /> */}
               </div>
               <div className="text-lg font-semibold text-[#0C1D32] mb-1">Anstead Ádám</div>
-              <div className="text-sm text-[#007AAD] text-center">COO / Operatív vezető / Kommunikációs Manager</div>
+              <div className="text-sm font-medium text-[#007AAD] text-center">COO / Operatív vezető / Kommunikációs Manager</div>
+              <div className="text-xs font-mono text-[#0C1D32] mt-1 break-all">adam.anstead@mobilien.hu</div>
             </div>
             {/* 3. vezető */}
             <div className="flex flex-col items-center">
@@ -151,7 +153,8 @@ export default function RolunkPage() {
                 {/* <img src="/vezetok/kovacs-david.jpg" alt="Kovács Dávid" className="object-cover w-full h-full" /> */}
               </div>
               <div className="text-lg font-semibold text-[#0C1D32] mb-1">Kovács Dávid</div>
-              <div className="text-sm text-[#007AAD] text-center">CTO / Technológiai vezető / Dev Lead</div>
+              <div className="text-sm font-medium text-[#007AAD] text-center">CTO / Technológiai vezető / Dev Lead</div>
+              <div className="text-xs font-mono text-[#0C1D32] mt-1 break-all">david.kovacs@mobilien.hu</div>
             </div>
             {/* 4. vezető */}
             <div className="flex flex-col items-center">
@@ -159,7 +162,8 @@ export default function RolunkPage() {
                 {/* <img src="/vezetok/kovacs-alex.jpg" alt="Kovács Alex" className="object-cover w-full h-full" /> */}
               </div>
               <div className="text-lg font-semibold text-[#0C1D32] mb-1">Kovács Alex</div>
-              <div className="text-sm text-[#007AAD] text-center">Head of IT operations / Math Lead / Domain Owner</div>
+              <div className="text-sm font-medium text-[#007AAD] text-center">Head of IT operations / Math Lead / Domain Owner</div>
+              <div className="text-xs font-mono text-[#0C1D32] mt-1 break-all">kovacsalex@mobilien.hu</div>
             </div>
           </div>
         </div>
