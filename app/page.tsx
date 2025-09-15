@@ -95,6 +95,12 @@ export default function Home() {
             >
               Hírlevél
             </button>
+            <Link
+              href="/rolunk"
+              className="text-[#0C1D32] hover:text-[#007AAD] transition-colors text-base font-medium"
+            >
+              Rólunk
+            </Link>
           </nav>
         </div>
       </header>
