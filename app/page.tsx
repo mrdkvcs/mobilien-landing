@@ -74,7 +74,7 @@ export default function Home() {
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
             <a
-              href="https://www.linkedin.com/company/Mobilien"
+              href="https://www.linkedin.com/company/Mobilien-Hungary"
               target="_blank"
               rel="noopener noreferrer"
               className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white hover:bg-[#007AAD] transition-colors"
