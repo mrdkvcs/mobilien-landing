@@ -32,7 +32,7 @@ export default function PrivacyPolicy() {
               Bevezetés
             </h2>
             <p>
-              A MobiShare ("mi", "minket" vagy "miénk") elkötelezett az Ön
+              A Mobilien ("mi", "minket" vagy "miénk") elkötelezett az Ön
               személyes adatainak védelme mellett. Ez az adatvédelmi szabályzat
               ismerteti, hogy milyen adatokat gyűjtünk, hogyan használjuk fel
               azokat, és milyen jogai vannak Önnek az adataival kapcsolatban.
@@ -59,7 +59,7 @@ export default function PrivacyPolicy() {
             </p>
             <ul className="list-disc pl-6 mb-6">
               <li>
-                Hírlevelek és frissítések küldése a MobiShare szolgáltatásairól
+                Hírlevelek és frissítések küldése a Mobilien szolgáltatásairól
               </li>
               <li>Tájékoztatás új funkciókról, eseményekről és ajánlatokról</li>
               <li>A szolgáltatásaink fejlesztése és személyre szabása</li>

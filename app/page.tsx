@@ -66,7 +66,7 @@ export default function Home() {
               src="/mobilien5.png"
               width={50}
               height={50}
-              alt="MobiShare Logo"
+              alt="Mobilien Logo"
             />
             <span className="text-xl font-bold text-[#0C1D32]">Mobilien</span>
           </div>
@@ -211,7 +211,7 @@ export default function Home() {
               A Mi Megoldásunk
             </h2>
             <p className="text-[#0C1D32]/70 max-w-2xl mx-auto">
-              A MobiShare egyesíti az összes töltőállomást Magyarországon
+              A Mobilien egyesíti az összes töltőállomást Magyarországon
               megbízható információkkal és MI-alapú funkciókkal.
             </p>
           </div>
@@ -306,7 +306,7 @@ export default function Home() {
               <span className="text-[#007AAD]">Új Kapuja</span>
             </h2>
             <p className="text-[#0C1D32]/70 max-w-2xl mx-auto">
-              Tervezed elektromos járműre váltani? A MobiShare az első lépés a
+              Tervezed elektromos járműre váltani? A Mobilien az első lépés a
               sikeres EV vásárláshoz Magyarországon.
             </p>
           </div>
@@ -362,7 +362,7 @@ export default function Home() {
 
               <div className="bg-white p-8 rounded-xl shadow-lg border border-[#D9E2E9] relative z-10">
                 <h3 className="text-2xl font-bold text-[#0C1D32] mb-6 text-center">
-                  Miért a MobiShare az első lépés az EV vásárláshoz?
+                  Miért a Mobilien az első lépés az EV vásárláshoz?
                 </h3>
 
                 <ul className="space-y-4">
@@ -471,7 +471,7 @@ export default function Home() {
               Küldetésünk
             </h2>
             <p className="text-xl text-[#0C1D32]/80 mb-8 leading-relaxed">
-              A MobiShare-nél elkötelezettek vagyunk Magyarország fenntartható
+              A Mobilien-nél elkötelezettek vagyunk Magyarország fenntartható
               mobilitásra való átállásának felgyorsítása mellett, az elektromos
               járművek elterjedésének akadályainak megszüntetésével. Hisszük,
               hogy a megbízható információk, a zökkenőmentes hozzáférés és a
@@ -505,7 +505,7 @@ export default function Home() {
               Maradj Naprakész
             </h2>
             <p className="text-[#D9E2E9] mb-8">
-              Légy az első, aki értesül a MobiShare indulásáról, és kapj
+              Légy az első, aki értesül a Mobilien indulásáról, és kapj
               exkluzív frissítéseket a fejlődésünkről.
             </p>
             <NewsletterForm />
@@ -530,7 +530,7 @@ export default function Home() {
                 src="/mobilien5.png"
                 width={50}
                 height={50}
-                alt="MobiShare Logo"
+                alt="Mobilien Logo"
               />
               <span className="text-lg font-bold text-[#FFFBFC]">Mobilien</span>
             </div>

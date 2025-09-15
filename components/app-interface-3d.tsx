@@ -79,7 +79,7 @@ export default function AppInterface3D() {
       ctx.fillStyle = "#FFFFFF"
       ctx.font = "bold 40px Arial"
       ctx.textAlign = "center"
-      ctx.fillText("MobiShare", canvas.width / 2, 60)
+      ctx.fillText("Mobilien", canvas.width / 2, 60)
 
       // Map background
       ctx.fillStyle = "#D9E2E9"
