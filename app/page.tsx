@@ -608,6 +608,7 @@ export default function Home() {
             <div className="flex flex-col items-center gap-40 mt-20 mb-20">
               <img src="/mobilienapp1.png" alt="Mobilien App 1" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.4)' }} />
               <img src="/mobilienapp2.png" alt="Mobilien App 2" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.4)' }} />
+              <img src="/mobilienapp3.png" alt="Mobilien App 3" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.4)' }} />
             </div>
           </div>
         </div>
