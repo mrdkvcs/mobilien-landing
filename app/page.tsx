@@ -137,7 +137,7 @@ export default function Home() {
           {/* Mobile hamburger + ikonok */}
           <div className="flex items-center gap-2 md:hidden">
             <a
-              href="https://www.linkedin.com/company/Mobilien"
+              href="https://www.linkedin.com/company/Mobilien-Hungary"
               target="_blank"
               rel="noopener noreferrer"
               className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white hover:bg-[#007AAD] transition-colors"
@@ -227,7 +227,7 @@ export default function Home() {
                 Érje el az összes töltőállomást Magyarországon egyetlen
                 alkalmazással. Valós idejű adatok, megbízható információk és
                 MI-alapú asszisztencia, valamint egy árérzékeny fogyasztóknak 
-                kedvező dinamikus árazási modell.
+                kedvező dinamikus árazási modell - egy alkalmazásban.
               
                 
               </p>
@@ -293,7 +293,7 @@ export default function Home() {
                   Félretájékoztatás
                 </h3>
                 <p className="text-[#D9E2E9]">
-                  A töltőállomások képességeiről szóló megbízhatatlan
+                  A töltőállomások képességeiről / működési státuszáról szóló megbízhatatlan
                   információk időpazarláshoz és frusztrációhoz vezetnek az
                   elektromos járművek tulajdonosai számára.
                 </p>
@@ -309,8 +309,9 @@ export default function Home() {
                   Valós Idejű Adatok Hiánya
                 </h3>
                 <p className="text-[#D9E2E9]">
-                  A jelenlegi alkalmazások nem nyújtanak pontos, valós idejű
-                  információkat a töltőállomások elérhetőségéről és működéséről.
+                  A jelenlegi alkalmazások nem biztosítanak valós idejű, 
+                  teljes körű útvonaltervezést a jármű típusát, 
+                  töltöttségi szintjét és a legoptimálisabb kompatibilis töltési pontokat figyelembe véve.
                 </p>
               </CardContent>
             </Card>
@@ -327,7 +328,9 @@ export default function Home() {
             </h2>
             <p className="text-[#0C1D32]/70 max-w-2xl mx-auto">
               A Mobilien egyesíti az összes töltőállomást Magyarországon
-              megbízható információkkal és MI-alapú funkciókkal.
+              megbízható információkkal és MI-alapú funkciókkal. 
+              Megoldást kínálunk, amely megmutatja a kívánt töltöttség eléréséhez szükséges töltési időt, 
+              és lehetővé teszi a töltő foglalását és indítását közvetlenül az alkalmazásból, <strong>mindezt útközben, piacilag a legolcsóbban.</strong>
             </p>
           </div>
 
@@ -360,7 +363,7 @@ export default function Home() {
                     <p className="text-[#0C1D32]/70">
                       Kapjon szakértői útmutatást MI asszisztensünktől, amely a
                       magyarországi elektromos jármű infrastruktúrára és iparági
-                      ismeretekre van kiképezve.
+                      ismeretekre van specifikusan kiképezve.
                     </p>
                   </div>
                 </div>
@@ -391,7 +394,7 @@ export default function Home() {
                     </h3>
                     <p className="text-[#0C1D32]/70">
                       MI-alapú útvonaltervezés, amely a költségek és a
-                      hatékonyság szempontjából optimalizált az Ön vezetési
+                      hatékonyság szempontjából optimalizált az Ön járműve és vezetési
                       szokásai alapján.
                     </p>
                   </div>
@@ -421,7 +424,7 @@ export default function Home() {
               <span className="text-[#007AAD]">Új Kapuja</span>
             </h2>
             <p className="text-[#0C1D32]/70 max-w-2xl mx-auto">
-              Tervezed elektromos járműre váltani? A Mobilien az első lépés a
+              Tervez elektromos járműre váltanani? A Mobilien az első lépés a
               sikeres EV vásárláshoz Magyarországon.
             </p>
           </div>
@@ -461,12 +464,12 @@ export default function Home() {
                   <span className="bg-[#007AAD] text-white w-8 h-8 rounded-full flex items-center justify-center mr-3">
                     3
                   </span>
-                  Költségkalkulátor
+                  Költségkalkulátor + számtalan más dashboard
                 </h3>
                 <p className="text-[#0C1D32]/70">
                   Összehasonlíthatod a jelenlegi üzemanyagköltségeidet a
                   potenciális elektromos töltési költségekkel, és láthatod a
-                  hosszú távú megtakarítási lehetőségeket.
+                  hosszú távú megtakarítási lehetőségeket, de rengeteg másik szimulációt futtathatsz a dashb
                 </p>
               </div>
             </div>
@@ -482,7 +485,7 @@ export default function Home() {
 
                 <ul className="space-y-4">
                   <li className="flex items-start">
-                    <div className="bg-[#007AAD]/10 p-2 rounded-full mr-3 mt-1">
+                    <div className="bg-[#007AAD]/10 p-2 rounded-full mr-3 flex items-center justify-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5 text-[#007AAD]"
@@ -498,7 +501,7 @@ export default function Home() {
                     </div>
                     <p className="text-[#0C1D32]/80">
                       <strong>Valós adatok</strong> a töltőállomásokról, nem
-                      marketinganyagok
+                      marketinganyagok, és jelentős mértékű költségoptimalizálás
                     </p>
                   </li>
                   <li className="flex items-start">
@@ -518,7 +521,7 @@ export default function Home() {
                     </div>
                     <p className="text-[#0C1D32]/80">
                       <strong>Közösségi visszajelzések</strong> a különböző EV
-                      modellek valós teljesítményéről
+                      modellek valós teljesítményéről illetve töltők állapotáról
                     </p>
                   </li>
                   <li className="flex items-start">
@@ -538,7 +541,7 @@ export default function Home() {
                     </div>
                     <p className="text-[#0C1D32]/80">
                       <strong>Személyre szabott tanácsadás</strong> a Mobi AI
-                      asszisztenstől a vásárlási döntéshez
+                      asszisztenstől a vásárlási döntéshez majd aktív használathoz
                     </p>
                   </li>
                   <li className="flex items-start">
@@ -602,6 +605,10 @@ export default function Home() {
                 Csatlakozz a Mozgalmunkhoz
               </Button>
             </div>
+            <div className="flex flex-col items-center gap-40 mt-20 mb-20">
+              <img src="/mobilienapp1.png" alt="Mobilien App 1" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.4)' }} />
+              <img src="/mobilienapp2.png" alt="Mobilien App 2" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.4)' }} />
+            </div>
           </div>
         </div>
       </section>
@@ -620,18 +627,23 @@ export default function Home() {
               Maradj Naprakész
             </h2>
             <p className="text-[#D9E2E9] mb-8">
-              Légy az első, aki értesül a Mobilien indulásáról, és kapj
-              exkluzív frissítéseket a fejlődésünkről.
+              Légy az első, aki értesül a Mobilien hírleveléről, frissítésekről és kapj
+              exkluzív betekintést a cég, valamint a fejlesztés kulisszái mögé!
             </p>
             <NewsletterForm />
             <p className="text-[#D9E2E9]/70 text-sm mt-4">
-              Tiszteletben tartjuk a magánéletedet. Bármikor leiratkozhatsz.
-              <Link
-                href="/privacy-policy"
-                className="text-[#007AAD] hover:underline"
-              >
-                Adatvédelmi szabályzat
-              </Link>
+            
+              {/* Privacy notice and unsubscribe sentence removed as requested */}
+              <br />
+              <span className="block mt-4 whitespace-pre-line">
+                Mobilien Technologies Kft.<br />
+                1021 Budapest, Budakeszi út 27.<br />
+                Adószám: 32893669-2-41<br />
+                Cégjegyzékszám: 01-09-448178<br />
+                E-mail: info@mobilien.hu<br />
+                Telefon: +36 30 382 9448 (PR Iroda)
+
+              </span>
             </p>
           </div>
         </div>
@@ -659,6 +671,8 @@ export default function Home() {
             </div>
             <div className="text-[#D9E2E9]/70 text-sm">
               © {new Date().getFullYear()} Mobilien. Minden jog fenntartva.
+            
+              
             </div>
           </div>
         </div>

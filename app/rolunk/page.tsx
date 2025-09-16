@@ -117,7 +117,7 @@ export default function RolunkPage() {
       {/* Rólunk tartalom */}
       <main className="container mx-auto py-20 px-4 flex-1 flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold mb-6">Rólunk</h1>
-        <p className="text-lg max-w-2xl text-center mb-8">
+          <p className="text-[#0C1D32]/80 max-w-4xl mx-auto mb-0.1 text-center leading-relaxed text-base md:text-lg">
           A Mobilien csapata elkötelezett a fenntartható közlekedés és az elektromos autózás népszerűsítése mellett. Célunk, hogy mindenki számára elérhetővé tegyük a legmodernebb EV megoldásokat, és segítsük ügyfeleinket a zöldebb jövő felé vezető úton.
           A csapatunk 2025 elején alakult meg és az MVM Edison országos inkubációs program döntős projektjei között szerepelt. 
           Egyesített országos töltőadatbázisunk, valós idejű geolokációs információink, CPO partnereink és működési státuszjelentéseink révén felhasználóink mindig megtalálják a legoptimálisabb és legolcsóbb töltési lehetőségeket. Saját fejlesztésű dinamikus árazási modellünk és AI-asszisztensünk segít az útvonal- és költségoptimalizálásban, elsőként a Magyarországi piacon, miközben hozzájárul a hálózat tehermentesítéséhez és a fenntartható energiagazdálkodáshoz, egy szebb és intelligens jövő érdekében.
@@ -141,7 +141,7 @@ export default function RolunkPage() {
             {/* 2. vezető */}
             <div className="flex flex-col items-center">
               <div className="w-32 h-32 bg-[#D9E2E9] rounded-full mb-4 overflow-hidden flex items-center justify-center">
-                {/* <img src="/vezetok/anstead-adam.jpg" alt="Anstead Ádám" className="object-cover w-full h-full" /> */}
+                <img src="/vezetoseg/craiyon_121158_image.png" alt="Anstead Ádám" className="object-cover w-full h-full" />
               </div>
               <div className="text-lg font-semibold text-[#0C1D32] mb-1">Anstead Ádám</div>
               <div className="text-sm font-medium text-[#007AAD] text-center">COO / Operatív vezető / Kommunikációs Manager</div>
@@ -225,13 +225,15 @@ export default function RolunkPage() {
             </p>
             <NewsletterForm />
             <p className="text-[#D9E2E9]/70 text-sm mt-4">
-              Tiszteletben tartjuk a magánéletedet. Bármikor leiratkozhatsz. 
-              <Link
-                href="/privacy-policy"
-                className="text-[#007AAD] hover:underline"
-              >
-                Adatvédelmi szabályzat
-              </Link>
+              <br />
+              <span className="block mt-4 whitespace-pre-line">
+                Mobilien Technologies Kft.<br />
+                1021 Budapest, Budakeszi út 27.<br />
+                Adószám: 32893669-2-41<br />
+                Cégjegyzékszám: 01-09-448178<br />
+                E-mail: info@mobilien.hu<br />
+                Telefon: +36 30 382 9448 (PR Iroda)
+              </span>
             </p>
           </div>
         </div>
