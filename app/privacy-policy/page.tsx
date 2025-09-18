@@ -14,9 +14,19 @@ export default function PrivacyPolicy() {
         </Link>
 
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bold text-[#0C1D32] mb-8">
-            Adatvédelmi Szabályzat
-          </h1>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-[#0C1D32]">
+              Adatvédelmi Szabályzat
+            </h1>
+            <a
+              href="/Mobilien%20%C3%81SZF.pdf"
+              download
+              className="inline-block px-6 py-2 bg-[#007AAD] text-white font-semibold rounded-md shadow hover:bg-[#005f87] transition-colors text-base whitespace-nowrap"
+              style={{ minWidth: '170px', textAlign: 'center' }}
+            >
+              ÁSZF Letöltése
+            </a>
+          </div>
 
           <div className="prose prose-lg max-w-none text-[#0C1D32]/80">
             <p className="text-lg">
