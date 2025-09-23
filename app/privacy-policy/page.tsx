@@ -154,9 +154,13 @@ export default function PrivacyPolicy() {
               kapcsolatot:
             </p>
             <p className="mb-6">
-              Email: info@mobilien.hu
               <br />
-              Cím: 1021 Budapest, Budakeszi Út
+              Mobilien Technologies Kft.<br />
+1021 Budapest, Budakeszi út 27.<br />
+Adószám: 32893669-2-41 <br />
+Cégjegyzékszám: 01-09-448178 <br />
+E-mail: info@mobilien.hu <br />
+Telefon: +36 30 382 9448 (PR Iroda)
             </p>
 
             <h2 className="text-2xl font-bold text-[#0C1D32] mt-8 mb-4">
