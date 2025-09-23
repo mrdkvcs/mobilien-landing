@@ -131,8 +131,7 @@ export default function RolunkPage() {
             {/* 1. vezető */}
             <div className="flex flex-col items-center">
               <div className="w-32 h-32 bg-[#D9E2E9] rounded-full mb-4 overflow-hidden flex items-center justify-center">
-                {/* Ide töltsd fel az arcképet: */}
-                {/* <img src="/vezetok/babjak-sandor.jpg" alt="Babják Sándor" className="object-cover w-full h-full" /> */}
+                <img src="/vezetoseg/sanyesz.png" alt="Babják Sándor" className="object-cover w-full h-full" />
               </div>
               <div className="text-lg font-semibold text-[#0C1D32] mb-1">Babják Sándor</div>
               <div className="text-sm font-medium text-[#007AAD] text-center">CEO / Ügyvezető</div>
