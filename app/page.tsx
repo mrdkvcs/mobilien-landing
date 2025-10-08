@@ -95,11 +95,11 @@ export default function Home() {
               WA
             </a>
             <a
-              href="https://zxc.hu/"
+              href="https://admin.mobilien.app/"
               target="_blank"
               rel="noopener noreferrer"
               className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white text-xs font-bold hover:bg-[#007AAD] transition-colors"
-              title="zxc.hu"
+              title="admin.mobilien.app"
             >
               AD
             </a>
@@ -157,11 +157,11 @@ export default function Home() {
               WA
             </a>
             <a
-              href="https://zxc.hu/"
+              href="https://admin.mobilien.app/"
               target="_blank"
               rel="noopener noreferrer"
               className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white text-xs font-bold hover:bg-[#007AAD] transition-colors"
-              title="zxc.hu"
+              title="admin.mobilien.app"
             >
               AD
             </a>
