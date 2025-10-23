@@ -427,8 +427,8 @@ export default function Home() {
               Tudj meg többet a dinamikus árazásról
             </h2>
             <div className="flex flex-col items-center gap-24 mt-12 mb-24">
-              <img src="/3.png" alt="Dinamikus árazás" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.05)' }} />
-              <img src="/mobilienapp3.png" alt="Mobilien App 3" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.4)' }} />
+              <img src="/3.png" alt="Dinamikus árazás" className="w-full max-w-[28rem] md:max-w-[32rem] object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.05)' }} />
+              <img src="/mobilienapp3.png" alt="Mobilien App 3" className="w-full max-w-[24rem] md:max-w-[28rem] object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.1)' }} />
             </div>
             <div className="flex justify-center mt-8">
               <Button
