@@ -10,8 +10,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import EVChargingIllustration from "@/components/ev-charging-illustration";
-import AppInterface3D from "@/components/app-interface-3d";
 import NewsletterForm from "@/components/newsletter-form";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
@@ -245,7 +243,11 @@ export default function Home() {
             <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
               <div className="absolute inset-0 bg-gradient-to-br from-[#007AAD]/20 to-[#0C1D32]/40 z-10 rounded-lg"></div>
               <div className="w-full h-full">
-                <EVChargingIllustration />
+                <img 
+                  src="/1.jpg" 
+                  alt="EV Töltő Megoldás" 
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
@@ -405,210 +407,37 @@ export default function Home() {
             <div className="order-1 md:order-2 relative h-[500px] rounded-lg overflow-hidden shadow-xl">
               <div className="absolute inset-0 bg-gradient-to-br from-[#007AAD]/20 to-[#0C1D32]/40 z-10 rounded-lg"></div>
               <div className="w-full h-full">
-                <AppInterface3D />
+                <img 
+                  src="/2.png" 
+                  alt="Mobilien Megoldás" 
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* EV Buyer's Guide Section */}
-      <section
-        id="ev-buyers-guide"
-        className="py-20 bg-gradient-to-r from-[#007AAD]/10 to-[#0C1D32]/10"
-      >
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0C1D32] mb-4">
-              Az Elektromos Jármű Vásárlás{" "}
-              <span className="text-[#007AAD]">Új Kapuja</span>
-            </h2>
-            <p className="text-[#0C1D32]/70 max-w-2xl mx-auto">
-              Tervez elektromos járműre váltanani? A Mobilien az első lépés a
-              sikeres EV vásárláshoz Magyarországon.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="bg-white p-6 rounded-lg shadow-md border border-[#D9E2E9]">
-                <h3 className="text-xl font-bold text-[#0C1D32] mb-3 flex items-center">
-                  <span className="bg-[#007AAD] text-white w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                    1
-                  </span>
-                  Intelligens EV Ajánlások
-                </h3>
-                <p className="text-[#0C1D32]/70">
-                  Az alkalmazásunk elemzi az utazási szokásaidat és személyre
-                  szabott EV ajánlásokat kínál, amelyek megfelelnek a valós
-                  igényeidnek és életmódodnak.
-                </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow-md border border-[#D9E2E9]">
-                <h3 className="text-xl font-bold text-[#0C1D32] mb-3 flex items-center">
-                  <span className="bg-[#007AAD] text-white w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                    2
-                  </span>
-                  Töltési Infrastruktúra Előrejelzés
-                </h3>
-                <p className="text-[#0C1D32]/70">
-                  Láthatod, hogy a lakóhelyed vagy munkahelyed környékén milyen
-                  töltési lehetőségek vannak, így könnyebben dönthetsz az
-                  elektromos járműre váltás mellett.
-                </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow-md border border-[#D9E2E9]">
-                <h3 className="text-xl font-bold text-[#0C1D32] mb-3 flex items-center">
-                  <span className="bg-[#007AAD] text-white w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                    3
-                  </span>
-                  Költségkalkulátor + számtalan más dashboard
-                </h3>
-                <p className="text-[#0C1D32]/70">
-                  Összehasonlíthatod a jelenlegi üzemanyagköltségeidet a
-                  potenciális elektromos töltési költségekkel, és láthatod a
-                  hosszú távú megtakarítási lehetőségeket, de rengeteg másik szimulációt futtathatsz a dashb
-                </p>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#007AAD]/20 rounded-full blur-2xl"></div>
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#0C1D32]/20 rounded-full blur-2xl"></div>
-
-              <div className="bg-white p-8 rounded-xl shadow-lg border border-[#D9E2E9] relative z-10">
-                <h3 className="text-2xl font-bold text-[#0C1D32] mb-6 text-center">
-                  Miért a Mobilien az első lépés az EV vásárláshoz?
-                </h3>
-
-                <ul className="space-y-4">
-                  <li className="flex items-start">
-                    <div className="bg-[#007AAD]/10 p-2 rounded-full mr-3 flex items-center justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-[#007AAD]"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <p className="text-[#0C1D32]/80">
-                      <strong>Valós adatok</strong> a töltőállomásokról, nem
-                      marketinganyagok, és jelentős mértékű költségoptimalizálás
-                    </p>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="bg-[#007AAD]/10 p-2 rounded-full mr-3 mt-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-[#007AAD]"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <p className="text-[#0C1D32]/80">
-                      <strong>Közösségi visszajelzések</strong> a különböző EV
-                      modellek valós teljesítményéről illetve töltők állapotáról
-                    </p>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="bg-[#007AAD]/10 p-2 rounded-full mr-3 mt-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-[#007AAD]"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <p className="text-[#0C1D32]/80">
-                      <strong>Személyre szabott tanácsadás</strong> a Mobi AI
-                      asszisztenstől a vásárlási döntéshez majd aktív használathoz
-                    </p>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="bg-[#007AAD]/10 p-2 rounded-full mr-3 mt-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-[#007AAD]"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <p className="text-[#0C1D32]/80">
-                      <strong>Zökkenőmentes átállás</strong> a hagyományos
-                      járműről elektromos járműre
-                    </p>
-                  </li>
-                </ul>
-
-                <div className="mt-8 text-center">
-                  <Button
-                    size="lg"
-                    className="bg-[#007AAD] hover:bg-[#007AAD]/90 w-full"
-                    onClick={() => scrollToSection(newsletterRef)}
-                  >
-                    Kezdd el az EV utazásodat
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Mission Section */}
       <section ref={missionRef} id="mission" className="py-20 bg-[#D9E2E9]/30">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-[#0C1D32] mb-6">
-              Küldetésünk
+              Tudj meg többet a dinamikus árazásról
             </h2>
-            <p className="text-xl text-[#0C1D32]/80 mb-8 leading-relaxed">
-              A Mobilien-nél elkötelezettek vagyunk Magyarország fenntartható
-              mobilitásra való átállásának felgyorsítása mellett, az elektromos
-              járművek elterjedésének akadályainak megszüntetésével. Hisszük,
-              hogy a megbízható információk, a zökkenőmentes hozzáférés és a
-              közösség által vezérelt megoldások kulcsfontosságúak egy zöldebb
-              jövő építéséhez.
-            </p>
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center gap-24 mt-12 mb-24">
+              <img src="/3.png" alt="Dinamikus árazás" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.05)' }} />
+              <img src="/mobilienapp3.png" alt="Mobilien App 3" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.4)' }} />
+            </div>
+            <div className="flex justify-center mt-8">
               <Button
                 size="lg"
                 className="bg-[#007AAD] hover:bg-[#007AAD]/90"
-                onClick={() => scrollToSection(newsletterRef)}
+                onClick={() => { window.location.href = '/kapcsolat'; }}
               >
-                Csatlakozz a Mozgalmunkhoz
+                Kapcsolatfelvétel
               </Button>
-            </div>
-            <div className="flex flex-col items-center gap-40 mt-20 mb-20">
-              <img src="/mobilienapp1.png" alt="Mobilien App 1" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.4)' }} />
-              <img src="/mobilienapp2.png" alt="Mobilien App 2" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.4)' }} />
-              <img src="/mobilienapp3.png" alt="Mobilien App 3" className="w-[32rem] max-w-full object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.4)' }} />
             </div>
           </div>
         </div>
