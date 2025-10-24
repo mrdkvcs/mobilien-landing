@@ -11,8 +11,18 @@ export default function AIChatWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Initialize session ID from localStorage
+  useEffect(() => {
+    const storedSessionId = localStorage.getItem('chat-session-id');
+    if (storedSessionId) {
+      setSessionId(storedSessionId);
+      console.log('[Chat] Using existing session:', storedSessionId);
+    }
+  }, []);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -35,7 +45,10 @@ export default function AIChatWidget() {
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message }),
+          body: JSON.stringify({ 
+            message,
+            sessionId: sessionId || undefined 
+          }),
         });
 
       if (!response.ok) {
@@ -43,6 +56,14 @@ export default function AIChatWidget() {
       }
 
       const data = await response.json();
+      
+      // Store session ID if this is the first message
+      if (data.sessionId && !sessionId) {
+        setSessionId(data.sessionId);
+        localStorage.setItem('chat-session-id', data.sessionId);
+        console.log('[Chat] New session created:', data.sessionId);
+      }
+      
       const aiMessage: Message = { 
         role: "assistant", 
         content: data.reply || "Sajnálom, nem tudok válaszolni." 

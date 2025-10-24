@@ -1,20 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { createOrGetSession, saveMessage, getChatHistory, updateSessionTimestamp, getContextData } from '@/lib/db';
+import { randomBytes } from 'crypto';
 
-// Load context data
-function loadContext() {
-  try {
-    const contextPath = path.join(process.cwd(), 'Agent', 'context', 'charging-prices.json');
-    const contextData = JSON.parse(fs.readFileSync(contextPath, 'utf8'));
-    return contextData;
-  } catch (error) {
-    console.error('[api] Failed to load context:', error);
-    return null;
-  }
+// Generate a unique session ID
+function generateSessionId(): string {
+  return `session_${Date.now()}_${randomBytes(8).toString('hex')}`;
 }
-
-const contextData = loadContext();
 
 async function fetchWithTimeout(resource: string, options: any = {}) {
   const { timeoutMs = 30000, ...rest } = options;
@@ -26,7 +17,7 @@ async function fetchWithTimeout(resource: string, options: any = {}) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { message } = await request.json();
+    const { message, sessionId: clientSessionId } = await request.json();
     const apiKey = process.env.AGENT_API_KEY || process.env.MISTRAL_API_KEY || 'iURK1Q2QKWiWpSMQTWveLoSkXhGvsEiv';
 
     if (!apiKey) {
@@ -36,14 +27,50 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid message format' }, { status: 400 });
     }
 
+    // Session management
+    const sessionId = clientSessionId || generateSessionId();
+    console.log(`[api] Processing message for session: ${sessionId}`);
+
+    // Create or get session from database
+    await createOrGetSession(sessionId);
+
+    // Save user message to database
+    await saveMessage(sessionId, 'user', message);
+
+    // Get chat history (last 10 messages for context)
+    const history = await getChatHistory(sessionId, 10);
+    
+    // Load context data from PostgreSQL
+    const contextData = await getContextData('charging_prices', 'hungary_2025');
+    
     // Build context-aware prompt
     let systemPrompt = `Te vagy Mobi, az e-mobilitási asszisztens. Segítesz az elektromos járművek töltésével, árazással és e-mobilitási kérdésekkel kapcsolatban.
 
 FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha nincs releváns információ a kontextusban, mondd el, hogy nem tudsz pontos választ adni.`;
 
     if (contextData) {
-      systemPrompt += `\n\nKONTEKSTUS - EV töltési árak Magyarországon (2025. október):\n${JSON.stringify(contextData, null, 2)}`;
+      systemPrompt += `\n\nKONTEKSTUS - EV töltési árak Magyarországon (2025. január):\n${JSON.stringify(contextData, null, 2)}`;
+      console.log('[api] Context data loaded from PostgreSQL');
+    } else {
+      console.warn('[api] No context data available from PostgreSQL');
     }
+
+    // Build messages array with history
+    const messages: any[] = [{ role: 'system', content: systemPrompt }];
+    
+    // Add chat history (excluding the last user message we just saved)
+    if (history.length > 0) {
+      const historyMessages = history
+        .slice(0, -1) // Exclude the last message (current user message)
+        .map((msg: any) => ({
+          role: msg.role,
+          content: msg.content
+        }));
+      messages.push(...historyMessages);
+    }
+    
+    // Add current user message
+    messages.push({ role: 'user', content: message });
 
     const mistralResponse = await fetchWithTimeout('https://api.mistral.ai/v1/chat/completions', {
       method: 'POST',
@@ -53,10 +80,7 @@ FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha
       },
       body: JSON.stringify({
         model: 'mistral-small-latest',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: message }
-        ],
+        messages,
         max_tokens: 500,
         temperature: 0.7
       }),
@@ -72,7 +96,13 @@ FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha
     const data = await mistralResponse.json();
     const reply = data?.choices?.[0]?.message?.content || '';
     
-    return NextResponse.json({ reply });
+    // Save assistant reply to database
+    await saveMessage(sessionId, 'assistant', reply);
+    
+    // Update session timestamp
+    await updateSessionTimestamp(sessionId);
+    
+    return NextResponse.json({ reply, sessionId });
   } catch (err: any) {
     console.error('[api] Server error:', err);
     return NextResponse.json({ error: 'Server error', details: String(err?.message || err) }, { status: 500 });

@@ -1,5 +1,5 @@
 // Minimal Express proxy for Mistral Agent API
-// Run: node Agent/server.js
+// Run: node Agent/test-server.js
 
 // Load API key directly from key.env
 const fs = require('fs');
