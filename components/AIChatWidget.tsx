@@ -1,0 +1,179 @@
+"use client";
+import { useState, useRef, useEffect } from "react";
+import { Send, Bot, User } from "lucide-react";
+
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export default function AIChatWidget() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+  }, [messages]);
+
+  const sendMessage = async () => {
+    const message = inputValue.trim();
+    if (!message || isLoading) return;
+
+    // Add user message
+    const userMessage: Message = { role: "user", content: message };
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:3000/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      const aiMessage: Message = { 
+        role: "assistant", 
+        content: data.reply || "Sajnálom, nem tudok válaszolni." 
+      };
+      
+      setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      const errorMessage: Message = { 
+        role: "assistant", 
+        content: "Hiba történt a kapcsolatban. Kérlek próbáld újra." 
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto mb+6">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-[360px] flex flex-col">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+              <Bot className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900">Mobi</h3>
+              <p className="text-sm text-gray-600">Az Ön e-mobilitási asszisztense</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Messages Area */}
+        <div ref={messagesContainerRef} className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-4">
+          {messages.length === 0 ? (
+            <div className="text-center text-gray-500 py-8">
+              <Bot className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+              <p>Kezdd el a beszélgetést!</p>
+            </div>
+          ) : (
+            messages.map((message, index) => (
+              <div
+                key={index}
+                className={`flex gap-3 motion-safe:animate-[fadeIn_.2s_ease-out] ${
+                  message.role === "user" ? "justify-end" : "justify-start"
+                }`}
+              >
+                <div
+                  className={`flex gap-3 max-w-[80%] ${
+                    message.role === "user" ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      message.role === "user"
+                        ? "bg-blue-500"
+                        : "bg-gray-100"
+                    }`}
+                  >
+                    {message.role === "user" ? (
+                      <User className="w-4 h-4 text-white" />
+                    ) : (
+                      <Bot className="w-4 h-4 text-gray-600" />
+                    )}
+                  </div>
+                  <div
+                    className={`px-4 py-3 rounded-2xl ${
+                      message.role === "user"
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-100 text-gray-900"
+                    }`}
+                  >
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                      {message.content}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+          {isLoading && (
+            <div className="flex gap-3 justify-start">
+              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <Bot className="w-4 h-4 text-gray-600" />
+              </div>
+              <div className="bg-gray-100 px-4 py-3 rounded-2xl">
+                <div className="flex gap-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Input Area */}
+        <div className="border-t border-gray-200 p-4">
+          <div className="flex gap-3">
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Írd ide a kérdésed..."
+              className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              disabled={isLoading}
+            />
+            <button
+              onClick={sendMessage}
+              disabled={!inputValue.trim() || isLoading}
+              className="px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            >
+              <Send className="w-4 h-4" />
+              Küldés
+            </button>
+          </div>
+        </div>
+      </div>
+      <style jsx>{`
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+      `}</style>
+    </div>
+  );
+}

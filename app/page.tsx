@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import NewsletterForm from "@/components/newsletter-form";
+import AIChatPanel from "@/components/AIChatPanel";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 
@@ -244,6 +245,11 @@ export default function Home() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* AI Chat Panel with animated gradient background */}
+      <section className="py-0">
+        <AIChatPanel />
       </section>
 
       {/* Problems Section */}
