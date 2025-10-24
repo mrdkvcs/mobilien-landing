@@ -1,5 +1,5 @@
 // Quick test for Mistral API key
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../key.env') });
 
 const API_KEY = process.env.AGENT_API_KEY || process.env.MISTRAL_API_KEY;
 
