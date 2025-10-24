@@ -60,11 +60,11 @@ export default function Home() {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-[#D9E2E9] bg-[#FFFBFC]/80 backdrop-blur-sm">
         <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <img
               src="/mobilien5.png"
-              width={50}
-              height={50}
+              width={36}
+              height={36}
               alt="Mobilien Logo"
             />
             <span className="text-xl font-bold text-[#0C1D32]">Mobilien</span>
@@ -212,57 +212,48 @@ export default function Home() {
         )}
       </header>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 md:py-32">
-        <div className="container relative z-10">
-          <div className="grid gap-8 md:grid-cols-2 items-center">
-            <div className="space-y-6">
-              <h1 className="text-4xl md:text-6xl font-bold text-[#0C1D32] leading-tight">
-                Az All-in-One <span className="text-[#007AAD]">EV Töltő</span>{" "}
-                Megoldás Magyarországon
+      {/* Hero Section - Full-width image with overlay content, no spacing */}
+      <section className="relative m-0 p-0">
+        <div className="relative overflow-hidden">
+          <img src="/4.jpg" alt="Hero" className="block w-full h-auto object-cover" style={{ objectPosition: 'center top', height: 'calc(100vh - 64px)' }} />
+          <div className="absolute inset-0 bg-gradient-to-tr from-[#0C1D32]/80 via-[#0C1D32]/40 to-transparent"></div>
+          <div className="absolute inset-0 container flex flex-col justify-start items-start pt-16">
+            <div>
+              <h1 className="text-white font-extrabold text-4xl sm:text-5xl md:text-7xl tracking-tight leading-[1.1] max-w-xl">
+                Az All-in-One EV Töltő Megoldás
               </h1>
-              <p className="text-lg text-[#0C1D32]/80 max-w-md">
-                Érje el az összes töltőállomást Magyarországon egyetlen
-                alkalmazással. Valós idejű adatok, megbízható információk és
-                MI-alapú asszisztencia, valamint egy árérzékeny fogyasztóknak 
-                kedvező dinamikus árazási modell - egy alkalmazásban.
-              
-                
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  size="lg"
-                  className="bg-[#007AAD] hover:bg-[#007AAD]/90"
-                  onClick={() => scrollToSection(newsletterRef)}
-                >
-                  Feliratkozás
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
             </div>
-            <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#007AAD]/20 to-[#0C1D32]/40 z-10 rounded-lg"></div>
-              <div className="w-full h-full">
-                <img 
-                  src="/1.jpg" 
-                  alt="EV Töltő Megoldás" 
-                  className="w-full h-full object-cover"
-                />
+            <div className="mt-36 w-full grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-white">
+                <h3 className="text-lg md:text-xl font-semibold mb-2">Töltőkeresés egyszerűen</h3>
+                <p className="text-white/90 text-sm md:text-base max-w-sm">Egy alkalmazás, amely összeköti Önt Magyarország összes EV töltőállomásával.</p>
+                <div className="mt-8">
+                  <Button size="lg" className="text-white hover:opacity-90" style={{ background: "linear-gradient(135deg,#0066FF,#00C2FF)" }} asChild>
+                    <Link href="/kapcsolat">Kapcsolatfelvétel</Link>
+                  </Button>
+                </div>
+              </div>
+              <div className="text-white">
+                <h3 className="text-lg md:text-xl font-semibold mb-2">Dinamikus árazás</h3>
+                <p className="text-white/90 text-sm md:text-base max-w-sm">Használja ki az ármozgásokat, és töltse járművét a legjobb időben, a legalacsonyabb áron.</p>
+              </div>
+              <div className="text-white">
+                <h3 className="text-lg md:text-xl font-semibold mb-2">Az Ön AI segítője</h3>
+                <p className="text-white/90 text-sm md:text-base max-w-sm">Mobi az Ön személyes AI ügynöke, aki segít eligazodni az e-mobilitás világában. Támogatja a töltéssel, útvonaltervezéssel és költségek optimalizálásával kapcsolatos döntéseiben.</p>
               </div>
             </div>
           </div>
         </div>
-        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-1/3 h-1/2 bg-[#D9E2E9]/50 rounded-l-full blur-3xl"></div>
       </section>
 
       {/* Problems Section */}
-      <section ref={problemsRef} id="problems" className="py-20 bg-[#0C1D32]">
+      <section ref={problemsRef} id="problems" className="py-20 bg-[#FFFBFC]">
         <div className="container">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#FFFBFC] mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0C1D32] mb-4">
               Válasz az e-mobilitási problémáira:
             </h2>
-            <p className="text-[#D9E2E9] max-w-2xl mx-auto">
+            <p className="text-[#0C1D32]/70 max-w-2xl mx-auto">
               A jelenlegi elektromos jármű töltési infrastruktúra Magyarországon
               számos kihívást jelent az elektromos járművek tulajdonosai
               számára.
@@ -270,15 +261,15 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-[#0C1D32] border border-[#007AAD]/30 shadow-lg">
+            <Card className="bg-white border border-[#D9E2E9] shadow-lg">
               <CardContent className="pt-6">
                 <div className="bg-[#007AAD]/10 p-3 rounded-full w-fit mb-4">
                   <Map className="h-6 w-6 text-[#007AAD]" />
                 </div>
-                <h3 className="text-xl font-bold text-[#FFFBFC] mb-2">
+                <h3 className="text-xl font-bold text-[#0C1D32] mb-2">
                   Széttagolt Infrastruktúra
                 </h3>
-                <p className="text-[#D9E2E9]">
+                <p className="text-[#0C1D32]/70">
                   A felhasználóknak jelenleg 5-6 különböző alkalmazásra van
                   szükségük, hogy hozzáférjenek az összes töltőállomáshoz
                   Magyarországon, ami frusztráló élményt teremt.
@@ -286,15 +277,15 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="bg-[#0C1D32] border border-[#007AAD]/30 shadow-lg">
+            <Card className="bg-white border border-[#D9E2E9] shadow-lg">
               <CardContent className="pt-6">
                 <div className="bg-[#007AAD]/10 p-3 rounded-full w-fit mb-4">
                   <MessageSquareText className="h-6 w-6 text-[#007AAD]" />
                 </div>
-                <h3 className="text-xl font-bold text-[#FFFBFC] mb-2">
+                <h3 className="text-xl font-bold text-[#0C1D32] mb-2">
                   Félretájékoztatás
                 </h3>
-                <p className="text-[#D9E2E9]">
+                <p className="text-[#0C1D32]/70">
                   A töltőállomások képességeiről / működési státuszáról szóló megbízhatatlan
                   információk időpazarláshoz és frusztrációhoz vezetnek az
                   elektromos járművek tulajdonosai számára.
@@ -302,15 +293,15 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="bg-[#0C1D32] border border-[#007AAD]/30 shadow-lg">
+            <Card className="bg-white border border-[#D9E2E9] shadow-lg">
               <CardContent className="pt-6">
                 <div className="bg-[#007AAD]/10 p-3 rounded-full w-fit mb-4">
                   <Clock className="h-6 w-6 text-[#007AAD]" />
                 </div>
-                <h3 className="text-xl font-bold text-[#FFFBFC] mb-2">
+                <h3 className="text-xl font-bold text-[#0C1D32] mb-2">
                   Valós Idejű Adatok Hiánya
                 </h3>
-                <p className="text-[#D9E2E9]">
+                <p className="text-[#0C1D32]/70">
                   A jelenlegi alkalmazások nem biztosítanak valós idejű, 
                   teljes körű útvonaltervezést a jármű típusát, 
                   töltöttségi szintjét és a legoptimálisabb kompatibilis töltési pontokat figyelembe véve.
@@ -326,13 +317,10 @@ export default function Home() {
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#0C1D32] mb-4">
-              A Mi Megoldásunk
+              Fedezd fel az alkalmazás funkcióit
             </h2>
             <p className="text-[#0C1D32]/70 max-w-2xl mx-auto">
-              A Mobilien egyesíti az összes töltőállomást Magyarországon
-              megbízható információkkal és MI-alapú funkciókkal. 
-              Megoldást kínálunk, amely megmutatja a kívánt töltöttség eléréséhez szükséges töltési időt, 
-              és lehetővé teszi a töltő foglalását és indítását közvetlenül az alkalmazásból, <strong>mindezt útközben, piacilag a legolcsóbban.</strong>
+              A Mobilien összekapcsolja az ország összes töltőjét AI-alapú segítséggel. Foglaljon, töltsön és spóroljon – mindezt egyetlen alkalmazásból.
             </p>
           </div>
 
@@ -428,12 +416,13 @@ export default function Home() {
             </h2>
             <div className="flex flex-col items-center gap-24 mt-12 mb-24">
               <img src="/3.png" alt="Dinamikus árazás" className="w-full max-w-[28rem] md:max-w-[32rem] object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.05)' }} />
-              <img src="/mobilienapp3.png" alt="Mobilien App 3" className="w-full max-w-[24rem] md:max-w-[28rem] object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.1)' }} />
+              <img src="/mobilienapp3.png" alt="Mobilien App 3" className="w-full max-w-[24rem] md:max-w-[56rem] object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.1)' }} />
             </div>
             <div className="flex justify-center mt-8">
               <Button
                 size="lg"
-                className="bg-[#007AAD] hover:bg-[#007AAD]/90"
+                className="text-white hover:opacity-90"
+                style={{ background: "linear-gradient(135deg,#0066FF,#00C2FF)" }}
                 onClick={() => { window.location.href = '/kapcsolat'; }}
               >
                 Kapcsolatfelvétel
@@ -482,11 +471,11 @@ export default function Home() {
       <footer className="py-8 bg-[#0C1D32] border-t border-[#007AAD]/20">
         <div className="container">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center gap-2 mb-4 md:mb-0">
+            <div className="flex items-center gap-1 mb-4 md:mb-0">
               <img
                 src="/mobilien5.png"
-                width={50}
-                height={50}
+                width={36}
+                height={36}
                 alt="Mobilien Logo"
               />
               <span className="text-lg font-bold text-[#FFFBFC]">Mobilien</span>
