@@ -399,6 +399,11 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-[#0C1D32] mb-6">
               Tudj meg többet a dinamikus árazásról
             </h2>
+            <p className="text-[#0C1D32]/70 text-lg mb-8">
+              Növelje forgalmát és használja ki az energiaárak változásait dinamikus árazással!
+              Az aktuális energiaárakhoz igazodó díjszabás lehetővé teszi, hogy alacsony árú időszakokban kedvezőbb tarifákat kínáljon, ezzel több ügyfelet vonzva töltőpontjaihoz.
+              A dinamikus árazás nemcsak a bevételt növeli, hanem javítja a töltők kihasználtságát és elősegíti a fenntartható működést is.
+            </p>
             <div className="flex flex-col items-center gap-24 mt-12 mb-24">
               <img src="/3.png" alt="Dinamikus árazás" className="w-full max-w-[28rem] md:max-w-[32rem] object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.05)' }} />
               <img src="/mobilienapp3.png" alt="Mobilien App 3" className="w-full max-w-[24rem] md:max-w-[56rem] object-cover rounded-xl shadow-lg" style={{ transform: 'scale(1.1)' }} />
