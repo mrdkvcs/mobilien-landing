@@ -72,36 +72,6 @@ export default function Home() {
           </div>
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
-            <a
-              href="https://www.linkedin.com/company/Mobilien-Hungary"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white hover:bg-[#007AAD] transition-colors"
-              title="LinkedIn"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.601v5.595z"/>
-              </svg>
-            </a>
-            {/* Ikonok a Problémák fül mellé balra */}
-            <a
-              href="https://mobilien.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white text-xs font-bold hover:bg-[#007AAD] transition-colors"
-              title="Mobilien.app"
-            >
-              WA
-            </a>
-            <a
-              href="https://admin.mobilien.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white text-xs font-bold hover:bg-[#007AAD] transition-colors"
-              title="admin.mobilien.app"
-            >
-              AD
-            </a>
             <button
               onClick={() => scrollToSection(problemsRef)}
               className="text-[#0C1D32] hover:text-[#007AAD] transition-colors"
@@ -132,14 +102,11 @@ export default function Home() {
             >
               Rólunk
             </Link>
-          </nav>
-          {/* Mobile hamburger + ikonok */}
-          <div className="flex items-center gap-2 md:hidden">
             <a
               href="https://www.linkedin.com/company/Mobilien-Hungary"
               target="_blank"
               rel="noopener noreferrer"
-              className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white hover:bg-[#007AAD] transition-colors"
+              className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white hover:bg-[#069ca8] transition-colors"
               title="LinkedIn"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -150,19 +117,23 @@ export default function Home() {
               href="https://mobilien.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white text-xs font-bold hover:bg-[#007AAD] transition-colors"
-              title="Mobilien.app"
+              className="ml-2 inline-flex items-center rounded-xl bg-black text-white px-4 py-2 text-sm font-semibold hover:text-[#069ca8] transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-[#007AAD]/30"
             >
-              WA
+              Irány az app
             </a>
+          </nav>
+          {/* Mobile hamburger + ikonok */}
+          <div className="flex items-center gap-2 md:hidden">
             <a
-              href="https://admin.mobilien.app/"
+              href="https://www.linkedin.com/company/Mobilien-Hungary"
               target="_blank"
               rel="noopener noreferrer"
-              className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white text-xs font-bold hover:bg-[#007AAD] transition-colors"
-              title="admin.mobilien.app"
+              className="mx-1 flex items-center justify-center w-8 h-8 rounded-full bg-black text-white hover:bg-[#069ca8] transition-colors"
+              title="LinkedIn"
             >
-              AD
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.601v5.595z"/>
+              </svg>
             </a>
             <button
               className="flex flex-col items-center justify-center w-10 h-10 rounded focus:outline-none focus:ring-2 focus:ring-[#007AAD]"
@@ -209,6 +180,15 @@ export default function Home() {
             >
               Rólunk
             </Link>
+              <a
+                href="https://mobilien.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-flex items-center justify-center rounded-xl bg-black text-white px-4 py-2 text-base font-semibold hover:text-[#069ca8] transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-[#007AAD]/30"
+                onClick={() => setMenuOpen(false)}
+              >
+                Irány az app
+              </a>
           </nav>
         )}
       </header>
@@ -398,8 +378,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="order-1 md:order-2 relative h-[500px] rounded-lg overflow-hidden shadow-xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#007AAD]/20 to-[#0C1D32]/40 z-10 rounded-lg"></div>
+            <div className="order-1 md:order-2 relative h-[500px] rounded-lg overflow-hidden">
               <div className="w-full h-full">
                 <img 
                   src="/2.png" 
@@ -444,7 +423,8 @@ export default function Home() {
       <section
         ref={newsletterRef}
         id="newsletter"
-        className="py-20 bg-[#0C1D32]"
+        className="py-20"
+        style={{ backgroundColor: '#000518' }}
       >
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
@@ -474,7 +454,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="py-8 bg-[#0C1D32] border-t border-[#007AAD]/20">
+      <footer className="py-8 border-t border-[#007AAD]/20" style={{ backgroundColor: '#000518' }}>
         <div className="container">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-1 mb-4 md:mb-0">

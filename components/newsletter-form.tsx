@@ -73,7 +73,7 @@ export default function NewsletterForm() {
           </div>
           <Button
             type="submit"
-            className="bg-[#007AAD] hover:bg-[#007AAD]/90 h-12"
+            className="bg-black hover:bg-black/90 h-12"
           >
             <Mail className="mr-2 h-4 w-4" />
             Feliratkozás

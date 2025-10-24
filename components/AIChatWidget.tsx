@@ -31,12 +31,12 @@ export default function AIChatWidget() {
     setInputValue("");
     setIsLoading(true);
 
-    try {
-      const response = await fetch("http://localhost:3000/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }),
-      });
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message }),
+        });
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -88,7 +88,7 @@ export default function AIChatWidget() {
           {messages.length === 0 ? (
             <div className="text-center text-gray-500 py-8">
               <Bot className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-              <p>Kezdd el a beszélgetést!</p>
+                    <p>Kérdezz valós idejű töltési árakról, vagy kérj személyre szabott EV-ajánlást a preferenciáid alapján.</p>
             </div>
           ) : (
             messages.map((message, index) => (
