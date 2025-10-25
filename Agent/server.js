@@ -87,6 +87,8 @@ app.use(cors({
   origin: [
     'https://mobilien.app',
     'https://www.mobilien.app',
+    'https://mobilien.hu',
+    'https://www.mobilien.hu',
     'http://localhost:8000',  // For local development
     'http://localhost:3000'   // For local development
   ],
