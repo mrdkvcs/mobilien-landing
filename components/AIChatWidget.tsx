@@ -46,7 +46,7 @@ export default function AIChatWidget() {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 
           (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
             ? 'http://localhost:3000' 
-            : 'https://api.yourdomain.com');
+            : 'https://api.mobilien.app');
         
         const response = await fetch(`${API_URL}/api/chat`, {
           method: "POST",
