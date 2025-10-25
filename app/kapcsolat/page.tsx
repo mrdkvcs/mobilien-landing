@@ -61,11 +61,11 @@ export default function ContactPage() {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-[#D9E2E9] bg-[#FFFBFC]/80 backdrop-blur-sm">
         <div className="container flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-1">
             <img
               src="/mobilien5.png"
-              width={50}
-              height={50}
+              width={36}
+              height={36}
               alt="Mobilien Logo"
             />
             <span className="text-xl font-bold text-[#0C1D32]">Mobilien</span>

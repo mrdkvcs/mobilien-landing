@@ -101,10 +101,46 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Helper function to generate session ID
+function generateSessionId() {
+  return `session_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+}
+
+// Helper function to create or get session
+async function createOrGetSession(sessionId, userIp, userAgent) {
+  try {
+    const result = await pool.query(
+      `INSERT INTO chat_sessions (session_id, user_ip, user_agent) 
+       VALUES ($1, $2, $3) 
+       ON CONFLICT (session_id) DO NOTHING 
+       RETURNING session_id`,
+      [sessionId, userIp, userAgent]
+    );
+    return sessionId;
+  } catch (error) {
+    console.error('[proxy] Error creating session:', error.message);
+    return sessionId;
+  }
+}
+
+// Helper function to save message
+async function saveMessage(sessionId, role, content, responseTimeMs = null, tokensUsed = null, contextUsed = false, errorOccurred = false, errorMessage = null) {
+  try {
+    await pool.query(
+      `INSERT INTO chat_messages (session_id, role, content, response_time_ms, tokens_used, model_used, context_used, error_occurred, error_message) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [sessionId, role, content, responseTimeMs, tokensUsed, 'mistral-small-latest', contextUsed, errorOccurred, errorMessage]
+    );
+  } catch (error) {
+    console.error('[proxy] Error saving message:', error.message);
+  }
+}
+
 // Chat endpoint
 app.post('/api/chat', async (req, res) => {
+  const startTime = Date.now();
   try {
-    const { message } = req.body;
+    const { message, sessionId: clientSessionId } = req.body;
     
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Invalid message format' });
@@ -114,7 +150,14 @@ app.post('/api/chat', async (req, res) => {
       return res.status(500).json({ error: 'Missing API key' });
     }
 
-    console.log('[proxy] Processing message:', message);
+    // Session management
+    const sessionId = clientSessionId || generateSessionId();
+    const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const userAgent = req.headers['user-agent'];
+    
+    await createOrGetSession(sessionId, userIp, userAgent);
+    
+    console.log('[proxy] Processing message for session:', sessionId);
 
     // Build system prompt with context
     let systemPrompt = `Te vagy Mobi, az e-mobilitási asszisztens. Segítesz az elektromos járművek töltésével, árazással és e-mobilitási kérdésekkel kapcsolatban.
@@ -161,12 +204,26 @@ FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha
 
     const data = await mistralResponse.json();
     const reply = data?.choices?.[0]?.message?.content || 'Sajnálom, nem tudok válaszolni.';
+    const tokensUsed = data?.usage?.total_tokens || null;
     
-    console.log('[proxy] Response received from Mistral API');
+    const responseTime = Date.now() - startTime;
+    console.log('[proxy] Response received from Mistral API in', responseTime, 'ms');
     
-    res.json({ reply });
+    // Save user message
+    await saveMessage(sessionId, 'user', message, null, null, false, false, null);
+    
+    // Save assistant response
+    await saveMessage(sessionId, 'assistant', reply, responseTime, tokensUsed, !!contextData, false, null);
+    
+    res.json({ reply, sessionId });
   } catch (error) {
     console.error('[proxy] Server error:', error);
+    
+    // Save error message if session exists
+    if (req.body.sessionId) {
+      await saveMessage(req.body.sessionId, 'assistant', 'Hiba történt a válasz generálása során.', null, null, false, true, error.message);
+    }
+    
     res.status(500).json({ 
       error: 'Server error', 
       details: error.message 

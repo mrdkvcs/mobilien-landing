@@ -60,7 +60,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#FFFBFC]">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-[#D9E2E9] bg-[#FFFBFC]/80 backdrop-blur-sm">
-        <div className="container flex h-16 items-center justify-between">
+        <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px] flex h-16 items-center justify-between">
           <div className="flex items-center gap-1">
             <img
               src="/mobilien5.png"
@@ -194,33 +194,36 @@ export default function Home() {
       </header>
 
       {/* Hero Section - Full-width image with overlay content, no spacing */}
-      <section className="relative m-0 p-0">
-        <div className="relative overflow-hidden">
-          <img src="/4.jpg" alt="Hero" className="block w-full h-auto object-cover" style={{ objectPosition: 'center top', height: 'calc(100vh - 64px)' }} />
+      <section className="relative m-0 p-0 h-[575px]">
+        <div className="relative overflow-hidden h-full">
+          <img src="/4.jpg" alt="Hero" className="block w-full h-full object-cover" style={{ objectPosition: 'center top' }} />
           <div className="absolute inset-0 bg-gradient-to-tr from-[#0C1D32]/80 via-[#0C1D32]/40 to-transparent"></div>
-          <div className="absolute inset-0 container flex flex-col justify-start items-start pt-16">
-            <div>
-              <h1 className="text-white font-extrabold text-4xl sm:text-5xl md:text-7xl tracking-tight leading-[1.1] max-w-xl">
-                Az All-in-One EV Töltő Megoldás
-              </h1>
-            </div>
-            <div className="mt-36 w-full grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-white">
-                <h3 className="text-lg md:text-xl font-semibold mb-2">Töltőkeresés egyszerűen</h3>
-                <p className="text-white/90 text-sm md:text-base max-w-sm">Egy alkalmazás, amely összeköti Önt Magyarország összes EV töltőállomásával.</p>
-                <div className="mt-8">
-                  <Button size="lg" className="text-white hover:opacity-90" style={{ background: "linear-gradient(135deg,#0066FF,#00C2FF)" }} asChild>
-                    <Link href="/kapcsolat">Kapcsolatfelvétel</Link>
-                  </Button>
+          <div className="absolute inset-0 flex justify-start items-start pt-16">
+            <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px]">
+              <div>
+                <h1 className="text-white font-extrabold tracking-tight leading-[1.05] text-[clamp(2.25rem,5vw,5.5rem)] max-w-[50ch]">
+                  Az All-in-One<br />
+                  EV Töltő Megoldás
+                </h1>
+              </div>
+              <div className="mt-44 grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+                <div className="text-white">
+                  <h3 className="text-lg md:text-xl font-semibold mb-2">Töltőkeresés egyszerűen</h3>
+                  <p className="text-white/90 text-sm md:text-base max-w-sm">Egy alkalmazás, amely összeköti Önt Magyarország összes EV töltőállomásával.</p>
+                  <div className="mt-8">
+                    <Button size="lg" className="text-white hover:opacity-90" style={{ background: "linear-gradient(135deg,#0066FF,#00C2FF)" }} asChild>
+                      <Link href="/kapcsolat">Kapcsolatfelvétel</Link>
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <div className="text-white">
-                <h3 className="text-lg md:text-xl font-semibold mb-2">Dinamikus árazás</h3>
-                <p className="text-white/90 text-sm md:text-base max-w-sm">Használja ki az ármozgásokat, és töltse járművét a legjobb időben, a legalacsonyabb áron.</p>
-              </div>
-              <div className="text-white">
-                <h3 className="text-lg md:text-xl font-semibold mb-2">Az Ön AI segítője</h3>
-                <p className="text-white/90 text-sm md:text-base max-w-sm">Mobi az Ön személyes AI ügynöke, aki segít eligazodni az e-mobilitás világában. Támogatja a töltéssel, útvonaltervezéssel és költségek optimalizálásával kapcsolatos döntéseiben.</p>
+                <div className="text-white">
+                  <h3 className="text-lg md:text-xl font-semibold mb-2">Dinamikus árazás</h3>
+                  <p className="text-white/90 text-sm md:text-base max-w-sm">Használja ki az ármozgásokat, és töltse járművét a legjobb időben, a legalacsonyabb áron.</p>
+                </div>
+                <div className="text-white">
+                  <h3 className="text-lg md:text-xl font-semibold mb-2">Az Ön AI segítője</h3>
+                  <p className="text-white/90 text-sm md:text-base max-w-sm">Mobi az Ön személyes AI ügynöke, aki segít eligazodni az e-mobilitás világában. Támogatja a töltéssel, útvonaltervezéssel és költségek optimalizálásával kapcsolatos döntéseiben.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -234,7 +237,7 @@ export default function Home() {
 
       {/* Problems Section */}
       <section ref={problemsRef} id="problems" className="py-20 bg-[#FFFBFC]">
-        <div className="container">
+        <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px]">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#0C1D32] mb-4">
               Válasz az e-mobilitási problémáira:
@@ -300,7 +303,7 @@ export default function Home() {
 
       {/* Features Section */}
       <section ref={featuresRef} id="features" className="py-20">
-        <div className="container">
+        <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px]">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#0C1D32] mb-4">
               Fedezd fel az alkalmazás funkcióit
@@ -394,7 +397,7 @@ export default function Home() {
 
       {/* Mission Section */}
       <section ref={missionRef} id="mission" className="py-20 bg-[#D9E2E9]/30">
-        <div className="container">
+        <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px]">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-[#0C1D32] mb-6">
               Tudj meg többet a dinamikus árazásról
@@ -431,7 +434,7 @@ export default function Home() {
         className="py-20"
         style={{ backgroundColor: '#000518' }}
       >
-        <div className="container">
+        <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px]">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-[#FFFBFC] mb-4">
               Maradj Naprakész
@@ -460,7 +463,7 @@ export default function Home() {
       </section>
 
       <footer className="py-8 border-t border-[#007AAD]/20" style={{ backgroundColor: '#000518' }}>
-        <div className="container">
+        <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px]">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-1 mb-4 md:mb-0">
               <img
