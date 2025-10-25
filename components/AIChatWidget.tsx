@@ -42,7 +42,13 @@ export default function AIChatWidget() {
     setIsLoading(true);
 
       try {
-        const response = await fetch("/api/chat", {
+        // Automatikus környezet felismerés
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 
+          (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000' 
+            : 'https://api.yourdomain.com');
+        
+        const response = await fetch(`${API_URL}/api/chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 

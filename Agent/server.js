@@ -1,5 +1,5 @@
 // Minimal Express proxy for Mistral Agent API
-// Run: node Agent/test-server.js
+// Run: node Agent/server.js
 
 // Load API key directly from key.env
 const fs = require('fs');
@@ -43,7 +43,7 @@ const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: false
 });
 
 async function loadContext() {
@@ -65,7 +65,13 @@ async function loadContext() {
   }
 }
 
-const contextData = await loadContext();
+let contextData = null;
+
+// Initialize context
+loadContext().then(data => {
+  contextData = data;
+  console.log('[proxy] Context initialization completed');
+});
 
 function fetchWithTimeout(resource, options = {}) {
   const { timeoutMs = 30000, ...rest } = options;
@@ -75,60 +81,58 @@ function fetchWithTimeout(resource, options = {}) {
     .finally(() => clearTimeout(id));
 }
 
-// Basic middlewares
+// Middleware
 app.use(cors());
 app.use(express.json());
 
 // Health check
-app.get('/health', (_req, res) => {
-  res.json({ ok: true });
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Chat proxy: POST /api/chat { message: string }
+// Chat endpoint
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message } = req.body || {};
-           const apiKey = AGENT_API_KEY;
-
-    if (!apiKey) {
-      return res.status(500).json({ error: 'Hiányzik a AGENT_API_KEY vagy MISTRAL_API_KEY környezeti változó.' });
-    }
+    const { message } = req.body;
+    
     if (!message || typeof message !== 'string') {
-      return res.status(400).json({ error: 'Hibás kérés: a body-ban "message" sztring szükséges.' });
+      return res.status(400).json({ error: 'Invalid message format' });
     }
 
-    // Közvetlen Mistral chat API (nem Agent)
-    const url = 'https://api.mistral.ai/v1/chat/completions';
+    if (!AGENT_API_KEY) {
+      return res.status(500).json({ error: 'Missing API key' });
+    }
 
-    console.log('[proxy] → outgoing to Mistral', { hasApiKey: !!apiKey, messagePreview: String(message).slice(0, 64) });
+    console.log('[proxy] Processing message:', message);
 
-           // Build context-aware prompt
-           let systemPrompt = `Te vagy Mobi, az e-mobilitási asszisztens. Segítesz az elektromos járművek töltésével, árazással és e-mobilitási kérdésekkel kapcsolatban.
+    // Build system prompt with context
+    let systemPrompt = `Te vagy Mobi, az e-mobilitási asszisztens. Segítesz az elektromos járművek töltésével, árazással és e-mobilitási kérdésekkel kapcsolatban.
 
 FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha nincs releváns információ a kontextusban, mondd el, hogy nem tudsz pontos választ adni.`;
 
-           if (contextData) {
-             systemPrompt += `\n\nKONTEKSTUS - EV töltési árak Magyarországon (2025. október):\n${JSON.stringify(contextData, null, 2)}`;
-           }
+    if (contextData) {
+      systemPrompt += `\n\nKONTEKSTUS - EV töltési árak Magyarországon (2025. január):\n${JSON.stringify(contextData, null, 2)}`;
+      console.log('[proxy] Context included in prompt');
+    } else {
+      console.warn('[proxy] No context data available');
+    }
 
-    const mistralResponse = await fetchWithTimeout(url, {
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: message }
+    ];
+
+    console.log('[proxy] Sending request to Mistral API...');
+    
+    const mistralResponse = await fetchWithTimeout('https://api.mistral.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${AGENT_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'mistral-small-latest', // kisebb, gyorsabb model
-        messages: [
-          {
-            role: 'system',
-            content: systemPrompt
-          },
-          {
-            role: 'user',
-            content: message
-          }
-        ],
+        model: 'mistral-small-latest',
+        messages,
         max_tokens: 500,
         temperature: 0.7
       }),
@@ -136,24 +140,31 @@ FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha
     });
 
     if (!mistralResponse.ok) {
-      const text = await mistralResponse.text();
-      console.error('[proxy] ← Mistral error', mistralResponse.status, text);
-      return res.status(mistralResponse.status).json({ error: 'Mistral hiba', details: text });
+      const errorText = await mistralResponse.text();
+      console.error('[proxy] Mistral API error:', mistralResponse.status, errorText);
+      return res.status(mistralResponse.status).json({ 
+        error: 'Mistral API error', 
+        details: errorText 
+      });
     }
 
     const data = await mistralResponse.json();
-    const reply = data?.choices?.[0]?.message?.content || '';
-    console.log('[proxy] ← Mistral ok');
-
-    return res.json({ reply });
-  } catch (err) {
-    console.error('[proxy] unexpected error', err);
-    return res.status(500).json({ error: 'Szerver hiba', details: String(err?.message || err) });
+    const reply = data?.choices?.[0]?.message?.content || 'Sajnálom, nem tudok válaszolni.';
+    
+    console.log('[proxy] Response received from Mistral API');
+    
+    res.json({ reply });
+  } catch (error) {
+    console.error('[proxy] Server error:', error);
+    res.status(500).json({ 
+      error: 'Server error', 
+      details: error.message 
+    });
   }
 });
 
+// Start server
 app.listen(PORT, () => {
-  console.log(`Local proxy listening on http://localhost:${PORT}`);
+  console.log(`[proxy] Local proxy listening on http://localhost:${PORT}`);
+  console.log(`[proxy] API endpoint: http://localhost:${PORT}/api/chat`);
 });
-
-

@@ -31,17 +31,12 @@ export async function POST(request: NextRequest) {
     const sessionId = clientSessionId || generateSessionId();
     console.log(`[api] Processing message for session: ${sessionId}`);
 
-    // Create or get session from database
-    await createOrGetSession(sessionId);
-
-    // Save user message to database
-    await saveMessage(sessionId, 'user', message);
-
-    // Get chat history (last 10 messages for context)
-    const history = await getChatHistory(sessionId, 10);
+    // Skip database operations for now to avoid timeout
+    console.log('[api] Skipping database operations to avoid timeout');
     
-    // Load context data from PostgreSQL
-    const contextData = await getContextData('charging_prices', 'hungary_2025');
+    // Skip context loading for now to avoid timeout
+    let contextData = null;
+    console.log('[api] Skipping context loading to avoid timeout');
     
     // Build context-aware prompt
     let systemPrompt = `Te vagy Mobi, az e-mobilitási asszisztens. Segítesz az elektromos járművek töltésével, árazással és e-mobilitási kérdésekkel kapcsolatban.
@@ -55,22 +50,11 @@ FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha
       console.warn('[api] No context data available from PostgreSQL');
     }
 
-    // Build messages array with history
-    const messages: any[] = [{ role: 'system', content: systemPrompt }];
-    
-    // Add chat history (excluding the last user message we just saved)
-    if (history.length > 0) {
-      const historyMessages = history
-        .slice(0, -1) // Exclude the last message (current user message)
-        .map((msg: any) => ({
-          role: msg.role,
-          content: msg.content
-        }));
-      messages.push(...historyMessages);
-    }
-    
-    // Add current user message
-    messages.push({ role: 'user', content: message });
+    // Build simple messages array without history
+    const messages: any[] = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: message }
+    ];
 
     const mistralResponse = await fetchWithTimeout('https://api.mistral.ai/v1/chat/completions', {
       method: 'POST',
@@ -84,7 +68,7 @@ FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha
         max_tokens: 500,
         temperature: 0.7
       }),
-      timeoutMs: 30000,
+      timeoutMs: 15000,
     });
 
     if (!mistralResponse.ok) {
@@ -96,11 +80,8 @@ FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha
     const data = await mistralResponse.json();
     const reply = data?.choices?.[0]?.message?.content || '';
     
-    // Save assistant reply to database
-    await saveMessage(sessionId, 'assistant', reply);
-    
-    // Update session timestamp
-    await updateSessionTimestamp(sessionId);
+    // Skip database operations for now
+    console.log('[api] Skipping database save operations');
     
     return NextResponse.json({ reply, sessionId });
   } catch (err: any) {
