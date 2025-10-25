@@ -68,10 +68,15 @@ async function loadContext() {
 let contextData = null;
 
 // Initialize context
-loadContext().then(data => {
-  contextData = data;
-  console.log('[proxy] Context initialization completed');
-});
+(async () => {
+  try {
+    console.log('[proxy] Starting context initialization...');
+    contextData = await loadContext();
+    console.log('[proxy] Context initialization completed. Data loaded:', !!contextData);
+  } catch (error) {
+    console.error('[proxy] Context initialization failed:', error);
+  }
+})();
 
 function fetchWithTimeout(resource, options = {}) {
   const { timeoutMs = 30000, ...rest } = options;
