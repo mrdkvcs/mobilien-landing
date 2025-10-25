@@ -82,7 +82,18 @@ function fetchWithTimeout(resource, options = {}) {
 }
 
 // Middleware
-app.use(cors());
+// CORS configuration for production
+app.use(cors({
+  origin: [
+    'https://mobilien.app',
+    'https://www.mobilien.app',
+    'http://localhost:8000',  // For local development
+    'http://localhost:3000'   // For local development
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Health check
