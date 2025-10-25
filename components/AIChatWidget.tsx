@@ -43,10 +43,13 @@ export default function AIChatWidget() {
 
       try {
         // Automatikus környezet felismerés
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || 
+        let API_URL = process.env.NEXT_PUBLIC_API_URL || 
           (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
             ? 'http://localhost:3000' 
             : 'https://api.mobilien.app');
+        
+        // Remove trailing slash if exists
+        API_URL = API_URL.replace(/\/$/, '');
         
         const response = await fetch(`${API_URL}/api/chat`, {
           method: "POST",
