@@ -18,7 +18,7 @@ async function fetchWithTimeout(resource: string, options: any = {}) {
 export async function POST(request: NextRequest) {
   try {
     const { message, sessionId: clientSessionId } = await request.json();
-    const apiKey = process.env.AGENT_API_KEY || process.env.MISTRAL_API_KEY || 'iURK1Q2QKWiWpSMQTWveLoSkXhGvsEiv';
+    const apiKey = process.env.AGENT_API_KEY || process.env.MISTRAL_API_KEY;
 
     if (!apiKey) {
       return NextResponse.json({ error: 'Missing API key' }, { status: 500 });
