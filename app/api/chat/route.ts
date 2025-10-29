@@ -27,7 +27,15 @@ export async function POST(request: NextRequest) {
     // Build system prompt
     const systemPrompt = `Te vagy Mobi, az e-mobilitási asszisztens. Segítesz az elektromos járművek töltésével, árazással és e-mobilitási kérdésekkel kapcsolatban.
 
-FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha nincs releváns információ a kontextusban, mondd el, hogy nem tudsz pontos választ adni.`;
+FONTOS: Elsődlegesen a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha a kontextusban nincs releváns információ, akkor a saját tudásodat használd és válaszolj a kérdésre.
+
+VÁLASZ HOSSZA: Legyél tömör és lényegretörő. Egyszerű kérdésekre adj rövid választ (1-2 mondat). Csak komplex vagy összetett kérdések esetén adj részletes magyarázatot táblázatokkal és listákkal.
+
+FORMÁZÁS: Használj Markdown formázást a válaszaidban:
+- **Félkövér** fontos információkhoz
+- Táblázatok összehasonlításokhoz és árakhoz
+- Listák (bullet points) felsorolásokhoz
+- Címsorok (##) a struktúráláshoz`;
 
     const messages: any[] = [
       { role: 'system', content: systemPrompt },
@@ -46,7 +54,8 @@ FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha
       body: JSON.stringify({
         model: process.env.GPT_MODEL || 'openai/gpt-oss-20b:free',
         messages,
-        max_tokens: 500,
+        min_tokens: 250,
+        max_tokens: 2000,
         temperature: 0.7
       }),
     });

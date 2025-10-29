@@ -10,7 +10,7 @@ const config = {
     apiKey: process.env.OPENROUTER_API_KEY || process.env.AGENT_API_KEY,
     baseUrl: 'https://openrouter.ai/api/v1',
     model: process.env.GPT_MODEL || 'openai/gpt-4-turbo',
-    defaultMaxTokens: 500,
+    defaultMaxTokens: 2000,
     defaultTemperature: 0.7,
   },
 

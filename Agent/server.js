@@ -36,6 +36,20 @@ async function loadContext() {
   }
 }
 
+// Load graph context from file
+const fs = require('fs');
+const path = require('path');
+let graphContext = null;
+try {
+  const graphPath = path.join(__dirname, 'context', 'context-graph.json');
+  if (fs.existsSync(graphPath)) {
+    graphContext = JSON.parse(fs.readFileSync(graphPath, 'utf8'));
+    console.log('[server] Graph context loaded from file');
+  }
+} catch (error) {
+  console.error('[server] Failed to load graph context:', error.message);
+}
+
 let contextData = null;
 
 // Initialize context
@@ -77,7 +91,22 @@ app.post('/api/chat', async (req, res) => {
     // Build system prompt with context
     let systemPrompt = `Te vagy Mobi, az e-mobilitási asszisztens. Segítesz az elektromos járművek töltésével, árazással és e-mobilitási kérdésekkel kapcsolatban.
 
-FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha nincs releváns információ a kontextusban, mondd el, hogy nem tudsz pontos választ adni.`;
+FONTOS: Elsődlegesen a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha a kontextusban nincs releváns információ, akkor a saját tudásodat használd és válaszolj a kérdésre.
+
+VÁLASZ HOSSZA: Legyél tömör és lényegretörő. Egyszerű kérdésekre adj rövid választ (1-2 mondat). Csak komplex vagy összetett kérdések esetén adj részletes magyarázatot táblázatokkal és listákkal.
+
+FORMÁZÁS: Használj Markdown formázást a válaszaidban:
+- **Félkövér** fontos információkhoz
+- Táblázatok összehasonlításokhoz és árakhoz
+- Listák (bullet points) felsorolásokhoz
+- Címsorok (##) a struktúráláshoz
+
+GRAFIKON MEGJELENÍTÉS: Ha a felhasználó grafikont vagy vizualizációt kér (pl. "mutasd grafikonon", "ábrázolja", "context-graph"), írd bele a válaszodba a grafikon adatokat így:
+
+Három backtick, majd "chart", új sor, majd a grafikon JSON adat, új sor, három backtick.
+
+Elérhető grafikon adatok:
+${JSON.stringify(graphContext, null, 2)}`;
 
     if (contextData) {
       systemPrompt += `\n\nKONTEXTUS - EV töltési árak Magyarországon (2025. január):\n${JSON.stringify(contextData, null, 2)}`;
@@ -95,7 +124,8 @@ FONTOS: Csak a mellékelt kontextus adatokat használd fel a válaszadáshoz. Ha
     console.log('[server] Using model:', config.openrouter.model);
     
     const response = await openrouter.chatCompletion(messages, {
-      max_tokens: 500,
+      min_tokens: 500,
+      max_tokens: 2000,
       temperature: 0.7
     });
 

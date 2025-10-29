@@ -1,5 +1,8 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import ChartRenderer from '@/components/ChartRenderer';
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -82,7 +85,45 @@ export default function ChatPage() {
                           : "mr-auto max-w-[80%] rounded-2xl bg-[#F4F6F8] text-[#0C1D32] px-4 py-2 shadow"
                       }
                     >
-                      <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                      {m.role === "user" ? (
+                        <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                      ) : (
+                        <div className="prose prose-sm max-w-none prose-headings:mt-3 prose-headings:mb-2 prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 prose-strong:text-gray-900 prose-strong:font-semibold prose-table:text-sm prose-table:border-collapse prose-th:border prose-th:border-gray-300 prose-th:bg-gray-50 prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-td:border prose-td:border-gray-300 prose-td:px-3 prose-td:py-2 prose-code:text-blue-600 prose-code:bg-blue-50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded">
+                          <ReactMarkdown 
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              code({node, inline, className, children, ...props}) {
+                                const match = /language-(\w+)/.exec(className || '');
+                                const language = match ? match[1] : '';
+                                
+                                // If it's a chart code block, render ChartRenderer
+                                if (language === 'chart' && !inline) {
+                                  try {
+                                    return <ChartRenderer chartData={String(children).trim()} />;
+                                  } catch (error) {
+                                    return <div className="text-red-500 text-sm">Hiba a grafikon renderelésében</div>;
+                                  }
+                                }
+                                
+                                // Otherwise render normal code
+                                return inline ? (
+                                  <code className={className} {...props}>
+                                    {children}
+                                  </code>
+                                ) : (
+                                  <pre className="bg-gray-100 p-3 rounded overflow-x-auto">
+                                    <code className={className} {...props}>
+                                      {children}
+                                    </code>
+                                  </pre>
+                                );
+                              }
+                            }}
+                          >
+                            {m.content}
+                          </ReactMarkdown>
+                        </div>
+                      )}
                     </div>
                   </li>
                 ))}
