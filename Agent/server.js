@@ -101,11 +101,28 @@ FORMÁZÁS: Használj Markdown formázást a válaszaidban:
 - Listák (bullet points) felsorolásokhoz
 - Címsorok (##) a struktúráláshoz
 
-GRAFIKON MEGJELENÍTÉS: Ha a felhasználó grafikont vagy vizualizációt kér (pl. "mutasd grafikonon", "ábrázolja", "context-graph"), írd bele a válaszodba a grafikon adatokat így:
+GRAFIKON MEGJELENÍTÉS:
+- Ha a felhasználó grafikont vagy vizualizációt kér (pl. "mutasd grafikonon", "ábrázolja", "context-graph"), mindig adj vissza chart kódblokkot JSON-nal (három backtick + "chart" + JSON + három backtick).
+- Ha van kontextus-grafikon adat, azt használd fel (lent). Ha NINCS releváns kontextus, készíts szemléltető/becslésen alapuló egyszerű adatot a kéréshez illeszkedően, vagy tegyél fel max. 1 pontosító kérdést és aztán adj vissza grafikont.
+- A JSON séma legyen egyszerű: { title, description?, type: "bar"|"line", data: [{ name, value }], xAxis: "name", yAxis: "value", yAxisLabel? }
 
-Három backtick, majd "chart", új sor, majd a grafikon JSON adat, új sor, három backtick.
+PÉLDA CHART FORMÁTUM (helyettesítsd be a tényleges adatokat):
+(három backtick)chart
+{
+  "title": "Városok népessége",
+  "type": "bar",
+  "data": [
+    { "name": "London", "value": 9 },
+    { "name": "Moskva", "value": 12 },
+    { "name": "Paris", "value": 11 }
+  ],
+  "xAxis": "name",
+  "yAxis": "value",
+  "yAxisLabel": "Népesség (millió fő)"
+}
+(három backtick)
 
-Elérhető grafikon adatok:
+ELÉRHETŐ KONTEXTUS GRAFIKON ADAT:
 ${JSON.stringify(graphContext, null, 2)}`;
 
     if (contextData) {

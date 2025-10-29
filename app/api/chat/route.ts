@@ -35,7 +35,47 @@ FORMÁZÁS: Használj Markdown formázást a válaszaidban:
 - **Félkövér** fontos információkhoz
 - Táblázatok összehasonlításokhoz és árakhoz
 - Listák (bullet points) felsorolásokhoz
-- Címsorok (##) a struktúráláshoz`;
+- Címsorok (##) a struktúráláshoz
+
+GRAFIKON MEGJELENÍTÉS:
+- Ha a felhasználó grafikont vagy vizualizációt kér (pl. "mutasd grafikonon", "ábrázolja", "töltési árak összehasonlítása", "context-graph"), mindig adj vissza chart kódblokkot JSON-nal (három backtick + "chart" + JSON + három backtick).
+- Ha NINCS releváns előre definiált adat, készíts szemléltető/becslésen alapuló egyszerű adatot a kéréshez illeszkedően.
+- A JSON séma: { "title": "...", "description": "...", "type": "bar", "data": [{ "name": "...", "value": 123 }], "xAxis": "name", "yAxis": "value", "yAxisLabel": "...", "color": "#009fa9" }
+
+PÉLDA CHART FORMÁTUM (helyettesítsd be a tényleges adatokat):
+(három backtick)chart
+{
+  "title": "Városok népessége",
+  "type": "bar",
+  "data": [
+    { "name": "London", "value": 9 },
+    { "name": "Moskva", "value": 12 }
+  ],
+  "xAxis": "name",
+  "yAxis": "value",
+  "yAxisLabel": "Népesség (millió fő)",
+  "color": "#009fa9"
+}
+(három backtick)
+
+ELŐRE DEFINIÁLT GRAFIKON ADAT - EV Töltési Árak (használd ezt, ha töltési árakat kérnek):
+{
+  "title": "EV Töltési Árak Összehasonlítása (2025)",
+  "description": "Különböző töltőszolgáltatók átlagos kWh árai Magyarországon",
+  "type": "bar",
+  "data": [
+    { "name": "Mobiliti", "value": 0 },
+    { "name": "MOL Plugee", "value": 95 },
+    { "name": "E.ON Drive", "value": 115 },
+    { "name": "Ionity", "value": 149 },
+    { "name": "Tesla Supercharger", "value": 125 },
+    { "name": "NKM", "value": 89 }
+  ],
+  "xAxis": "name",
+  "yAxis": "value",
+  "yAxisLabel": "Ár (Ft/kWh)",
+  "color": "#009fa9"
+}`;
 
     const messages: any[] = [
       { role: 'system', content: systemPrompt },
