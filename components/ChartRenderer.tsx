@@ -18,12 +18,15 @@ export default function ChartRenderer({ chartData }: { chartData: ChartData | st
   let data: ChartData;
   try {
     data = typeof chartData === 'string' ? JSON.parse(chartData) : chartData;
+    console.log('[ChartRenderer] Parsed data:', data);
   } catch (error) {
-    console.error('Failed to parse chart data:', error);
+    console.error('[ChartRenderer] Failed to parse chart data:', error);
     return <div className="text-red-500 text-sm">Hiba a grafikon betöltésekor</div>;
   }
 
   const { title, description, type = 'bar', data: chartDataArray, xAxis = 'name', yAxis = 'value', yAxisLabel } = data;
+  console.log('[ChartRenderer] chartDataArray:', chartDataArray);
+  console.log('[ChartRenderer] xAxis:', xAxis, 'yAxis:', yAxis);
   const barColor = '#009fa9';
 
   return (
