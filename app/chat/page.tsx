@@ -59,9 +59,9 @@ export default function ChatPage() {
   return (
     <main className="min-h-[calc(100vh-64px)] bg-[#FFFBFC] text-[#0C1D32]">
       <div className="mx-auto w-[min(960px,92%)] py-8">
-        <h1 className="text-2xl font-semibold">Chat (helyi teszt a Mistral API-hoz)</h1>
+        <h1 className="text-2xl font-semibold">Chat (OpenRouter GPT API)</h1>
         <p className="text-sm text-[#0C1D32]/70 mt-1">
-          Írj egy üzenetet, a rendszer továbbítja a helyi proxy felé: http://localhost:3000/api/chat
+          Írj egy üzenetet, a rendszer továbbítja az Agent szerver felé: http://localhost:3000/api/chat
         </p>
 
         <div className="mt-6 grid gap-4">
