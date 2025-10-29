@@ -27,7 +27,14 @@ export default function ChartRenderer({ chartData }: { chartData: ChartData | st
   const { title, description, type = 'bar', data: chartDataArray, xAxis = 'name', yAxis = 'value', yAxisLabel } = data;
   console.log('[ChartRenderer] chartDataArray:', chartDataArray);
   console.log('[ChartRenderer] xAxis:', xAxis, 'yAxis:', yAxis);
-  const barColor = '#009fa9';
+  
+  // Validate data
+  if (!chartDataArray || chartDataArray.length === 0) {
+    console.error('[ChartRenderer] No data array found or empty');
+    return <div className="text-orange-500 text-sm">Nincs adat a grafikonhoz</div>;
+  }
+  
+  const barColor = data.color || '#009fa9';
 
   return (
     <div className="my-3" style={{ background: 'transparent', backgroundColor: 'transparent' }}>

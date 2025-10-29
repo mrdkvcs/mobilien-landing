@@ -102,28 +102,16 @@ FORMÁZÁS: Használj Markdown formázást a válaszaidban:
 - Címsorok (##) a struktúráláshoz
 
 GRAFIKON MEGJELENÍTÉS:
-- Ha a felhasználó grafikont vagy vizualizációt kér (pl. "mutasd grafikonon", "ábrázolja", "context-graph"), mindig adj vissza chart kódblokkot JSON-nal (három backtick + "chart" + JSON + három backtick).
-- Ha van kontextus-grafikon adat, azt használd fel (lent). Ha NINCS releváns kontextus, készíts szemléltető/becslésen alapuló egyszerű adatot a kéréshez illeszkedően, vagy tegyél fel max. 1 pontosító kérdést és aztán adj vissza grafikont.
-- A JSON séma legyen egyszerű: { title, description?, type: "bar"|"line", data: [{ name, value }], xAxis: "name", yAxis: "value", yAxisLabel? }
+- Ha a felhasználó grafikont vagy vizualizációt kér (pl. "mutasd grafikonon", "ábrázolja", "context-graph", "EV töltési árak"), MINDIG adj vissza chart kódblokkot JSON-nal (három backtick + "chart" + JSON + három backtick).
+- Ha "context-graph" vagy "EV töltési árak" kérés érkezik, akkor PONTOSAN a lenti ELÉRHETŐ KONTEXTUS GRAFIKON ADAT-ot másold be a chart blokkba, változtatás nélkül!
+- Ha más grafikon kérés érkezik (pl. városok, népesség), készíts egyszerű adatot, de használd a helyes sémát: a data tömbben minden objektumnak legyen "name" és az yAxis szerinti mezője (pl. "value", "price", stb.)
 
-PÉLDA CHART FORMÁTUM (helyettesítsd be a tényleges adatokat):
-(három backtick)chart
-{
-  "title": "Városok népessége",
-  "type": "bar",
-  "data": [
-    { "name": "London", "value": 9 },
-    { "name": "Moskva", "value": 12 },
-    { "name": "Paris", "value": 11 }
-  ],
-  "xAxis": "name",
-  "yAxis": "value",
-  "yAxisLabel": "Népesség (millió fő)"
-}
-(három backtick)
+FONTOS: A chart JSON-ban az yAxis mező neve határozza meg, hogy melyik adatmezőt rajzolja ki. Pl. ha yAxis="price", akkor a data-ban "price" mezőnek kell lennie.
 
-ELÉRHETŐ KONTEXTUS GRAFIKON ADAT:
-${JSON.stringify(graphContext, null, 2)}`;
+ELÉRHETŐ KONTEXTUS GRAFIKON ADAT (EV töltési árak):
+${JSON.stringify(graphContext, null, 2)}
+
+Ha "context-graph" vagy "töltési árak" kérés jön, másold be PONTOSAN ezt a JSON-t a chart blokkba (három backtick)chart és (három backtick) közé!`;
 
     if (contextData) {
       systemPrompt += `\n\nKONTEXTUS - EV töltési árak Magyarországon (2025. január):\n${JSON.stringify(contextData, null, 2)}`;

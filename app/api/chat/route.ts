@@ -38,44 +38,33 @@ FORMÁZÁS: Használj Markdown formázást a válaszaidban:
 - Címsorok (##) a struktúráláshoz
 
 GRAFIKON MEGJELENÍTÉS:
-- Ha a felhasználó grafikont vagy vizualizációt kér (pl. "mutasd grafikonon", "ábrázolja", "töltési árak összehasonlítása", "context-graph"), mindig adj vissza chart kódblokkot JSON-nal (három backtick + "chart" + JSON + három backtick).
-- Ha NINCS releváns előre definiált adat, készíts szemléltető/becslésen alapuló egyszerű adatot a kéréshez illeszkedően.
-- A JSON séma: { "title": "...", "description": "...", "type": "bar", "data": [{ "name": "...", "value": 123 }], "xAxis": "name", "yAxis": "value", "yAxisLabel": "...", "color": "#009fa9" }
+- Ha a felhasználó grafikont vagy vizualizációt kér (pl. "mutasd grafikonon", "ábrázolja", "context-graph", "EV töltési árak"), MINDIG adj vissza chart kódblokkot JSON-nal (három backtick + "chart" + JSON + három backtick).
+- Ha "context-graph" vagy "EV töltési árak" kérés érkezik, akkor PONTOSAN a lenti ELÉRHETŐ KONTEXTUS GRAFIKON ADAT-ot másold be a chart blokkba, változtatás nélkül!
+- Ha más grafikon kérés érkezik (pl. városok, népesség), készíts egyszerű adatot, de használd a helyes sémát: a data tömbben minden objektumnak legyen "name" és az yAxis szerinti mezője (pl. "value", "price", stb.)
 
-PÉLDA CHART FORMÁTUM (helyettesítsd be a tényleges adatokat):
-(három backtick)chart
-{
-  "title": "Városok népessége",
-  "type": "bar",
-  "data": [
-    { "name": "London", "value": 9 },
-    { "name": "Moskva", "value": 12 }
-  ],
-  "xAxis": "name",
-  "yAxis": "value",
-  "yAxisLabel": "Népesség (millió fő)",
-  "color": "#009fa9"
-}
-(három backtick)
+FONTOS: A chart JSON-ban az yAxis mező neve határozza meg, hogy melyik adatmezőt rajzolja ki. Pl. ha yAxis="price", akkor a data-ban "price" mezőnek kell lennie.
 
-ELŐRE DEFINIÁLT GRAFIKON ADAT - EV Töltési Árak (használd ezt, ha töltési árakat kérnek):
+ELÉRHETŐ KONTEXTUS GRAFIKON ADAT (EV töltési árak):
 {
+  "graphId": "ev-charging-prices-comparison",
   "title": "EV Töltési Árak Összehasonlítása (2025)",
   "description": "Különböző töltőszolgáltatók átlagos kWh árai Magyarországon",
   "type": "bar",
   "data": [
-    { "name": "Mobiliti", "value": 0 },
-    { "name": "MOL Plugee", "value": 95 },
-    { "name": "E.ON Drive", "value": 115 },
-    { "name": "Ionity", "value": 149 },
-    { "name": "Tesla Supercharger", "value": 125 },
-    { "name": "NKM", "value": 89 }
+    { "name": "Mobiliti", "price": 0 },
+    { "name": "MOL Plugee", "price": 95 },
+    { "name": "E.ON Drive", "price": 115 },
+    { "name": "Ionity", "price": 149 },
+    { "name": "Tesla Supercharger", "price": 125 },
+    { "name": "NKM", "price": 89 }
   ],
   "xAxis": "name",
-  "yAxis": "value",
+  "yAxis": "price",
   "yAxisLabel": "Ár (Ft/kWh)",
   "color": "#009fa9"
-}`;
+}
+
+Ha "context-graph" vagy "töltési árak" kérés jön, másold be PONTOSAN ezt a JSON-t a chart blokkba (három backtick)chart és (három backtick) közé!`;
 
     const messages: any[] = [
       { role: 'system', content: systemPrompt },
