@@ -7,13 +7,14 @@ import { Mail } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
-import { subscribeToNewsletter } from "@/app/actions";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState("");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  async function handleSubmit(formData: FormData) {
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if (!privacyAccepted) {
       toast.error(
         `Kérjük, fogadja el az adatvédelmi szabályzatot a folytatáshoz.`,
@@ -25,22 +26,27 @@ export default function NewsletterForm() {
       return;
     }
     try {
-      const result = await subscribeToNewsletter(formData);
-
-      if (result.success) {
-        toast.success(`${result.message}`, {
-          position: "top-center",
-          autoClose: 3000,
-        });
-        setEmail(""); // Clear the form on success
+      const emailVal = email.trim().toLowerCase();
+      const resp = await fetch("https://api.mobilien.app/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailVal, source: "landing" }),
+      });
+      const data = await resp.json().catch(() => ({} as any));
+      if (!resp.ok) {
+        toast.error(
+          data?.error || data?.message || "Hiba történt a feliratkozás során. Kérjük, próbálja újra később.",
+          { position: "top-center", autoClose: 5000 },
+        );
         setPrivacyAccepted(false);
-      } else {
-        toast.error(`${result.message}`, {
-          position: "top-center",
-          autoClose: 5000,
-        });
-        setPrivacyAccepted(false);
+        return;
       }
+      toast.success("Sikeres feliratkozás! Köszönjük érdeklődését.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      setEmail("");
+      setPrivacyAccepted(false);
     } catch (error) {
       toast.error(
         "Nem sikerült kapcsolódni a szerverhez. Kérjük, próbálja újra később.",
@@ -55,10 +61,7 @@ export default function NewsletterForm() {
 
   return (
     <>
-      <form
-        action={handleSubmit}
-        className="flex flex-col gap-4 max-w-md mx-auto"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md mx-auto">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <Input

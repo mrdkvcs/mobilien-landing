@@ -1,5 +1,4 @@
 "use server";
-import { supabase } from "@/lib/supabase";
 import { z } from "zod";
 
 // Define schema for form validation
@@ -21,29 +20,25 @@ export async function subscribeToNewsletter(
     // Validate the data
     const validatedData = newsletterSchema.parse({ email });
 
-    // Insert data into Supabase
-    const { error } = await supabase.from("newsletter_subscribers").insert([
-      {
-        email: validatedData.email,
-        subscribed_at: new Date().toISOString(),
-      },
-    ]);
+    // Call Mobilien API to store newsletter signup
+    const resp = await fetch("https://api.mobilien.app/api/newsletter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: validatedData.email, source: "landing" }),
+      // Ensure server-side fetch, no caching
+      cache: "no-store",
+    });
 
-    if (error) {
-      // Check if it's a duplicate email error
-      if (error.code === "23505") {
-        return {
-          success: false,
-          message: "Ez az email cím már feliratkozott a hírlevelünkre",
-        };
-      }
+    let payload: any = null;
+    try {
+      payload = await resp.json();
+    } catch (_) {
+      // ignore JSON parse errors
+    }
 
-      console.error("Supabase error:", error);
-      return {
-        success: false,
-        message:
-          "Hiba történt a feliratkozás során. Kérjük, próbálja újra később.",
-      };
+    if (!resp.ok) {
+      const msg = payload?.error || payload?.message || "Nem sikerült a feliratkozás";
+      return { success: false, message: msg };
     }
 
     return {

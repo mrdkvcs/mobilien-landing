@@ -17,6 +17,28 @@ const pool = new Pool({
   ssl: config.database.ssl
 });
 
+// Ensure newsletter_subscriptions table exists
+const ensureNewsletterTableSQL = `
+CREATE TABLE IF NOT EXISTS newsletter_subscriptions (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  source TEXT,
+  ip_address TEXT,
+  user_agent TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+`;
+
+(async () => {
+  try {
+    await pool.query(ensureNewsletterTableSQL);
+    console.log('[server] Ensured newsletter_subscriptions table exists');
+  } catch (err) {
+    console.error('[server] Failed to ensure newsletter_subscriptions table:', err.message);
+  }
+})();
+
 async function loadContext() {
   try {
     const result = await pool.query(
@@ -71,6 +93,64 @@ app.use(express.json());
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Newsletter signup endpoint
+app.post('/api/newsletter', async (req, res) => {
+  try {
+    const { email, source } = req.body || {};
+
+    if (!email || typeof email !== 'string') {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(normalizedEmail)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    // Get client IP address
+    const xff = req.headers['x-forwarded-for'];
+    let ipAddress = '';
+    if (Array.isArray(xff)) {
+      ipAddress = String(xff[0] || '').split(',')[0].trim();
+    } else if (typeof xff === 'string' && xff.length > 0) {
+      ipAddress = xff.split(',')[0].trim();
+    }
+    if (!ipAddress) {
+      ipAddress =
+        (req.headers['cf-connecting-ip'] && String(req.headers['cf-connecting-ip'])) ||
+        (req.headers['x-real-ip'] && String(req.headers['x-real-ip'])) ||
+        (req.ip && String(req.ip)) ||
+        (req.socket && req.socket.remoteAddress) ||
+        '';
+    }
+    if (ipAddress && ipAddress.startsWith('::ffff:')) {
+      ipAddress = ipAddress.substring(7);
+    }
+    const userAgent = req.headers['user-agent'] || '';
+
+    const result = await pool.query(
+      `INSERT INTO newsletter_subscriptions (email, source, ip_address, user_agent)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (email) DO UPDATE
+         SET source = COALESCE(EXCLUDED.source, newsletter_subscriptions.source),
+             ip_address = COALESCE(EXCLUDED.ip_address, newsletter_subscriptions.ip_address),
+             user_agent = COALESCE(EXCLUDED.user_agent, newsletter_subscriptions.user_agent),
+             updated_at = NOW()
+       RETURNING id, email, created_at`,
+      [normalizedEmail, source || null, ipAddress || null, userAgent || null]
+    );
+
+    const id = result.rows[0].id;
+    console.log(`[server] Newsletter signup stored - ID: ${id}, Email: ${normalizedEmail}`);
+
+    return res.status(201).json({ success: true, id });
+  } catch (error) {
+    console.error('[server] Newsletter signup error:', error);
+    return res.status(500).json({ error: 'Failed to store newsletter signup', details: error.message });
+  }
 });
 
 // Chat endpoint
@@ -153,6 +233,7 @@ Ha "context-graph" vagy "töltési árak" kérés jön, másold be PONTOSAN ezt 
 app.listen(PORT, () => {
   console.log(`[server] 🚀 Mobilien AI Agent listening on http://localhost:${PORT}`);
   console.log(`[server] 💬 API endpoint: http://localhost:${PORT}/api/chat`);
+  console.log(`[server] ✉️ Newsletter endpoint: http://localhost:${PORT}/api/newsletter`);
   console.log(`[server] 🤖 Model: ${config.openrouter.model}`);
   console.log(`[server] ✅ Ready to serve requests!`);
 });
