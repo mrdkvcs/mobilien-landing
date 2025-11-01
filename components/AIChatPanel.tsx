@@ -71,7 +71,7 @@ export default function AIChatPanel() {
       />
 
       {/* Foreground content spacing */}
-      <div className="relative py-[60px] md:py-[85px]">
+      <div className="relative py-[45px] md:py-[70px]">
         <div className="w-[min(96%,1180px)] mx-auto">
           <AIChatWidget />
         </div>
