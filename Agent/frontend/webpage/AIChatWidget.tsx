@@ -122,7 +122,7 @@ export default function AIChatWidget() {
         </div>
 
         {/* Messages Area */}
-        <div ref={messagesContainerRef} className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-4" style={{ maxHeight: 'calc(460px - 160px)', height: 'auto' }}>
+        <div ref={messagesContainerRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-visible px-6 py-4 space-y-4" style={{ maxHeight: 'calc(460px - 160px)', height: 'auto' }}>
           {messages.length === 0 ? (
             <div className="text-center text-gray-500 py-8">
               <Bot className="w-8 h-8 mx-auto mb-2 text-gray-400" />
@@ -133,10 +133,14 @@ export default function AIChatWidget() {
               console.log(`[Chat] Rendering message ${index}:`, message.role, message.content.substring(0, 50));
               return (
               <div
-                key={index}
-                className={`flex gap-3 motion-safe:animate-[fadeIn_.2s_ease-out] ${
+                key={`message-${index}-${message.role}`}
+                className={`flex gap-3 motion-safe:animate-[fadeIn_.2s_ease-out] w-full ${
                   message.role === "user" ? "justify-end" : "justify-start"
                 }`}
+                style={{
+                  visibility: 'visible',
+                  opacity: 1,
+                }}
               >
                 <div
                   className={`flex gap-3 max-w-[80%] ${
@@ -157,11 +161,15 @@ export default function AIChatWidget() {
                     )}
                   </div>
                   <div
-                    className={`px-4 py-3 rounded-2xl ${
+                    className={`px-4 py-3 rounded-2xl relative z-10 ${
                       message.role === "user"
                         ? "bg-blue-500 text-white"
                         : "bg-gray-100 text-gray-900"
                     }`}
+                    style={{
+                      visibility: 'visible',
+                      opacity: 1,
+                    }}
                   >
                     {message.role === "user" ? (
                       <p className="text-sm leading-relaxed whitespace-pre-wrap">
@@ -233,8 +241,8 @@ export default function AIChatWidget() {
         </div>
 
         {/* Input Area */}
-        <div className="border-t border-gray-200 p-4">
-          <div className="flex gap-3">
+        <div className="border-t border-gray-200 p-4 flex-shrink-0">
+          <div className="flex gap-3 items-center">
             <input
               ref={inputRef}
               type="text"
@@ -242,16 +250,16 @@ export default function AIChatWidget() {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Írd ide a kérdésed..."
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="flex-1 min-w-0 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               disabled={isLoading}
             />
             <button
               onClick={sendMessage}
               disabled={!inputValue.trim() || isLoading}
-              className="px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              className="px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap"
             >
               <Send className="w-4 h-4" />
-              Küldés
+              <span>Küldés</span>
             </button>
           </div>
         </div>
