@@ -14,22 +14,24 @@ export default function AIChatPanel() {
       />
 
       {/* Animated overlays */}
-      <div className="absolute inset-0 animate-[pulse_8s_ease-in-out_infinite_alternate]"
+      <div className="absolute inset-0 animate-pulse"
         style={{
           background:
             "radial-gradient(circle at 30% 20%, rgba(5, 20, 37,1) 100%, rgba(4,12,25,1) 100%) 40%, transparent 100%)",
+          animation: "pulse 8s ease-in-out infinite alternate",
         }}
       />
-      <div className="absolute inset-0 animate-[pulse_6s_ease-in-out_infinite_alternate-reverse]"
+      <div className="absolute inset-0"
         style={{
           background:
             "radial-gradient(circle at 70% 80%, rgba(4,12,25,1) 100%, rgba(4,12,25,1) 100%, transparent 80%)",
+          animation: "pulse 6s ease-in-out infinite alternate-reverse",
         }}
       />
 
       {/* Flowing shapes */}
       <div
-        className="absolute -top-48 -left-48 w-[800px] h-[800px] animate-[flow_12s_ease-in-out_infinite]"
+        className="absolute -top-48 -left-48 w-[800px] h-[800px] animate-flow"
         style={{
           borderRadius: "40% 60% 50% 30%",
           background:
@@ -37,7 +39,7 @@ export default function AIChatPanel() {
         }}
       />
       <div
-        className="absolute -bottom-36 -right-36 w-[600px] h-[600px] animate-[flow-reverse_15s_ease-in-out_infinite]"
+        className="absolute -bottom-36 -right-36 w-[600px] h-[600px] animate-flow-reverse"
         style={{
           borderRadius: "60% 40% 30% 70%",
           background:
@@ -47,7 +49,7 @@ export default function AIChatPanel() {
 
       {/* Accent dots */}
       <div
-        className="absolute top-[20%] right-[15%] w-[120px] h-[120px] rounded-full animate-[float_4s_ease-in-out_infinite]"
+        className="absolute top-[20%] right-[15%] w-[120px] h-[120px] rounded-full animate-float"
         style={{
           background:
             "linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05))",
@@ -55,15 +57,16 @@ export default function AIChatPanel() {
         }}
       />
       <div
-        className="absolute bottom-[30%] left-[20%] w-[80px] h-[80px] rounded-full animate-[float_6s_ease-in-out_infinite_reverse]"
+        className="absolute bottom-[30%] left-[20%] w-[80px] h-[80px] rounded-full"
         style={{
           background:
             "linear-gradient(135deg, rgba(71,185,165,0.3), rgba(71,185,165,0.1))",
+          animation: "float 6s ease-in-out infinite reverse",
         }}
       />
 
       {/* Shimmer line */}
-      <div className="absolute top-[10%] left-[10%] right-[10%] h-[2px] animate-[shimmer_3s_ease-in-out_infinite]"
+      <div className="absolute top-[10%] left-[10%] right-[10%] h-[2px] animate-shimmer"
         style={{
           background:
             "linear-gradient(90deg, transparent, rgba(0,157,167,0.8), transparent)",
@@ -71,30 +74,12 @@ export default function AIChatPanel() {
       />
 
       {/* Foreground content spacing */}
-      <div className="relative py-[45px] md:py-[70px]">
+      <div className="relative py-[70px] md:py-[95px]">
         <div className="w-[min(96%,1180px)] mx-auto">
           <AIChatWidget />
         </div>
       </div>
 
-      {/* Keyframes */}
-      <style jsx>{`
-        @keyframes pulse { from { opacity: .5; transform: scale(1); } to { opacity: .8; transform: scale(1.1); } }
-        @keyframes flow {
-          0% { transform: rotate(0deg) translateX(0px) translateY(0px); }
-          33% { transform: rotate(120deg) translateX(50px) translateY(-30px); }
-          66% { transform: rotate(240deg) translateX(-20px) translateY(40px); }
-          100% { transform: rotate(360deg) translateX(0px) translateY(0px); }
-        }
-        @keyframes flow-reverse {
-          0% { transform: rotate(0deg) translateX(0px) translateY(0px); }
-          33% { transform: rotate(-120deg) translateX(-40px) translateY(20px); }
-          66% { transform: rotate(-240deg) translateX(30px) translateY(-50px); }
-          100% { transform: rotate(-360deg) translateX(0px) translateY(0px); }
-        }
-        @keyframes float { 0%, 100% { transform: translateY(0px) scale(1); } 50% { transform: translateY(-20px) scale(1.05); } }
-        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
-      `}</style>
     </div>
   );
 }

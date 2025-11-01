@@ -40,7 +40,12 @@ export default function AIChatWidget() {
 
     // Add user message
     const userMessage: Message = { role: "user", content: message };
-    setMessages(prev => [...prev, userMessage]);
+    console.log('[Chat] Adding user message:', userMessage);
+    setMessages(prev => {
+      const newMessages = [...prev, userMessage];
+      console.log('[Chat] Messages after adding user:', newMessages);
+      return newMessages;
+    });
     setInputValue("");
     setIsLoading(true);
 
@@ -101,8 +106,8 @@ export default function AIChatWidget() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mb+6">
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-[435px] flex flex-col">
+    <div className="max-w-4xl mx-auto mb-6">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-[460px] flex flex-col" style={{ maxHeight: '460px', height: '460px' }}>
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
           <div className="flex items-center gap-3">
@@ -117,14 +122,16 @@ export default function AIChatWidget() {
         </div>
 
         {/* Messages Area */}
-        <div ref={messagesContainerRef} className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-4">
+        <div ref={messagesContainerRef} className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-4" style={{ maxHeight: 'calc(460px - 160px)', height: 'auto' }}>
           {messages.length === 0 ? (
             <div className="text-center text-gray-500 py-8">
               <Bot className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                    <p>Kérdezz valós idejű töltési árakról, vagy kérj személyre szabott EV-ajánlást a preferenciáid alapján.</p>
+              <p>Kérdezz valós idejű töltési árakról, vagy kérj személyre szabott EV-ajánlást a preferenciáid alapján.</p>
             </div>
           ) : (
-            messages.map((message, index) => (
+            messages.map((message, index) => {
+              console.log(`[Chat] Rendering message ${index}:`, message.role, message.content.substring(0, 50));
+              return (
               <div
                 key={index}
                 className={`flex gap-3 motion-safe:animate-[fadeIn_.2s_ease-out] ${
@@ -172,8 +179,14 @@ export default function AIChatWidget() {
                               // If it's a chart code block, render ChartRenderer
                               if (language === 'chart' && !inline) {
                                 try {
-                                  return <ChartRenderer chartData={String(children).trim()} />;
+                                  const chartContent = String(children).trim();
+                                  if (!chartContent || chartContent === 'null' || chartContent === 'undefined') {
+                                    console.error('[AIChatWidget] Empty chart content');
+                                    return <div className="text-orange-500 text-sm">Nincs grafikonadat a válaszban</div>;
+                                  }
+                                  return <ChartRenderer chartData={chartContent} />;
                                 } catch (error) {
+                                  console.error('[AIChatWidget] Chart render error:', error);
                                   return <div className="text-red-500 text-sm">Hiba a grafikon renderelésében</div>;
                                 }
                               }
@@ -200,7 +213,8 @@ export default function AIChatWidget() {
                   </div>
                 </div>
               </div>
-            ))
+              );
+            })
           )}
           {isLoading && (
             <div className="flex gap-3 justify-start">

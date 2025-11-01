@@ -15,13 +15,28 @@ interface ChartData {
 
 export default function ChartRenderer({ chartData }: { chartData: ChartData | string }) {
   // Parse if string
-  let data: ChartData;
+  let data: ChartData | null = null;
   try {
+    if (!chartData) {
+      console.error('[ChartRenderer] No chart data provided');
+      return <div className="text-red-500 text-sm">Nincs grafikonadat</div>;
+    }
+    
     data = typeof chartData === 'string' ? JSON.parse(chartData) : chartData;
     console.log('[ChartRenderer] Parsed data:', data);
+    
+    // Validate parsed data
+    if (!data || typeof data !== 'object') {
+      console.error('[ChartRenderer] Invalid chart data structure');
+      return <div className="text-red-500 text-sm">Érvénytelen grafikonadat</div>;
+    }
   } catch (error) {
     console.error('[ChartRenderer] Failed to parse chart data:', error);
     return <div className="text-red-500 text-sm">Hiba a grafikon betöltésekor</div>;
+  }
+
+  if (!data) {
+    return <div className="text-red-500 text-sm">Nincs grafikonadat</div>;
   }
 
   const { title, description, type = 'bar', data: chartDataArray, xAxis = 'name', yAxis = 'value', yAxisLabel } = data;
