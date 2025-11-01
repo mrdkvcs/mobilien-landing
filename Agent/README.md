@@ -20,9 +20,16 @@ Agent/
 │   └── schemas/               # JSON sémák
 │       └── chart-schema.json
 │
-├── frontend/                   # Frontend template-ek
-│   └── templates/
-│       └── README.md          # Frontend használati útmutató
+├── frontend/                   # Frontend komponensek
+│   ├── webpage/               # Weboldal komponensek (működő)
+│   │   ├── AIChatWidget.tsx
+│   │   ├── AIChatPanel.tsx
+│   │   ├── ChartRenderer.tsx
+│   │   └── README.md
+│   ├── webapp/                # WebApp komponensek (jövőbeli, üres)
+│   │   └── README.md
+│   └── templates/            # Általános dokumentáció
+│       └── README.md
 │
 ├── migrations/                 # Adatbázis migrációk
 │   └── 002_create_context_table.sql
@@ -140,7 +147,10 @@ A `shared/knowledge/` mappa tartalmazza:
 
 ## 🎨 Frontend Integráció
 
-A frontend komponensek template-jei a `frontend/templates/` mappában találhatók. Részletek: [Frontend README](frontend/templates/README.md)
+A frontend komponensek a `frontend/webpage/` mappában találhatók (weboldal) és a `frontend/webapp/` mappában (jövőbeli WebApp). Részletek:
+- [Webpage README](frontend/webpage/README.md) - Weboldal komponensek
+- [WebApp README](frontend/webapp/README.md) - WebApp tervek
+- [Frontend MCP Context](frontend/MCP_FRONTEND_CONTEXT.md) - Teljes frontend dokumentáció
 
 ### Szükséges npm package-ek (frontend):
 ```bash

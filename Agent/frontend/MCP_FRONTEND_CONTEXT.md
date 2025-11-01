@@ -6,7 +6,7 @@
 **Szinkronizáció:** Jövőbeli cél, hogy ez a fájl API végponton keresztül (FastAPI + REST API vagy hasonló) hostolva legyen, így ha egy fejlesztő frissíti, akkor a másik fejlesztő ugyanazon projektmappájában lévő .md fájl is automatikusan frissül. Így minden AI asszisztens mindig naprakész, megosztott tudásbázissal rendelkezik.
 
 **Utolsó frissítés:** 2025. november 1.  
-**Verzió:** 2.0.0  
+**Verzió:** 2.0.1  
 **Projekt:** Mobilien AI Agent - Frontend Templates
 
 ---
@@ -15,11 +15,19 @@
 
 ```
 Agent/frontend/
-└── templates/
-    └── README.md           # Frontend használati útmutató
+├── webpage/                # Weboldal komponensek (aktuális, működő)
+│   ├── AIChatWidget.tsx
+│   ├── AIChatPanel.tsx
+│   ├── ChartRenderer.tsx
+│   └── README.md
+├── webapp/                  # WebApp komponensek (jövőbeli, üres)
+│   └── README.md
+├── templates/               # Általános template dokumentáció
+│   └── README.md
+└── MCP_FRONTEND_CONTEXT.md  # Ez a fájl
 ```
 
-**Jelenlegi állapot:** Előkészítő fázis. A frontend komponensek jelenleg a projekt root `components/` mappájában vannak, de a jövőben ide kerülnek template-ként.
+**Jelenlegi állapot:** ✅ Komponensek áthelyezve az `Agent/frontend/webpage/` mappába. WebApp mappa előkészítve.
 
 ---
 
@@ -57,25 +65,21 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 
 ---
 
-## 🎯 Jövőbeli Frontend Struktúra (Tervezett)
+## 🎯 Frontend Struktúra (Aktuális - v2.0.1)
 
-### Cél: Multi-Platform Support
+### Multi-Platform Support (Implementálva)
 
 ```
 Agent/frontend/
-├── templates/
-│   ├── README.md                   # Általános dokumentáció
-│   ├── shared/                     # Közös komponensek
-│   │   ├── ChartRenderer.tsx
-│   │   └── types.ts
-│   ├── website/                    # Mobilien.app komponensek
-│   │   ├── AIChatWidget.tsx
-│   │   ├── AIChatPanel.tsx
-│   │   └── styles/
-│   └── webapp/                     # WebApp komponensek
-│       ├── AIChatWidget.tsx        # WebApp-specifikus UI
-│       ├── AIChatPanel.tsx
-│       └── styles/
+├── webpage/                        # ✅ Weboldal komponensek (aktuális, működő)
+│   ├── AIChatWidget.tsx            # Chat widget
+│   ├── AIChatPanel.tsx             # Animált wrapper
+│   ├── ChartRenderer.tsx           # Grafikon renderelő
+│   └── README.md                   # Dokumentáció
+├── webapp/                         # ✅ WebApp komponensek (jövőbeli, üres)
+│   └── README.md                   # WebApp tervek
+├── templates/                      # Általános dokumentáció
+│   └── README.md
 └── MCP_FRONTEND_CONTEXT.md         # Ez a fájl
 ```
 
@@ -95,12 +99,11 @@ Agent/frontend/
 
 ---
 
-## 📦 Jelenlegi Frontend Komponensek (Root `components/`)
+## 📦 Frontend Komponensek (Agent/frontend/webpage/)
 
 ### 1. `AIChatWidget.tsx` - Fő Chat Widget
 
-**Helye:** `components/AIChatWidget.tsx` (projekt root)  
-**Jövőbeli helye:** `Agent/frontend/templates/website/AIChatWidget.tsx`
+**Helye:** `Agent/frontend/webpage/AIChatWidget.tsx` ✅
 
 **Felelősség:** Chat UI logika, üzenet küldés/fogadás, session management, Markdown renderelés.
 
@@ -204,8 +207,7 @@ const sendMessage = async () => {
 
 ### 2. `AIChatPanel.tsx` - Chat Wrapper
 
-**Helye:** `components/AIChatPanel.tsx` (projekt root)  
-**Jövőbeli helye:** `Agent/frontend/templates/website/AIChatPanel.tsx`
+**Helye:** `Agent/frontend/webpage/AIChatPanel.tsx` ✅
 
 **Felelősség:** Chat widget konténer animált háttérrel és gradientekkel.
 
@@ -259,8 +261,7 @@ const sendMessage = async () => {
 
 ### 3. `ChartRenderer.tsx` - Grafikon Renderelő
 
-**Helye:** `components/ChartRenderer.tsx` (projekt root)  
-**Jövőbeli helye:** `Agent/frontend/templates/shared/ChartRenderer.tsx`
+**Helye:** `Agent/frontend/webpage/ChartRenderer.tsx` ✅
 
 **Felelősség:** JSON chart adatok → Recharts BarChart renderelés.
 
@@ -367,50 +368,66 @@ if (!chartDataArray || chartDataArray.length === 0) {
 
 ## 🚀 WebApp Integráció (Jövőbeli)
 
-### Tervezett Lépések
+### Jelenlegi Állapot
 
-1. **Frontend Template-ek Másolása**
-   ```bash
-   # Website komponensek
-   cp components/AIChatWidget.tsx Agent/frontend/templates/website/
-   cp components/AIChatPanel.tsx Agent/frontend/templates/website/
-   
-   # Shared komponensek
-   cp components/ChartRenderer.tsx Agent/frontend/templates/shared/
-   ```
+✅ **Webpage komponensek:** Áthelyezve és működő (`Agent/frontend/webpage/`)  
+⏳ **WebApp komponensek:** Mappa előkészítve, komponensek jövőben kerülnek ide
 
-2. **WebApp Komponensek Létrehozása**
+### Tervezett WebApp Komponensek
+
+1. **WebApp Komponensek Létrehozása** (jövőbeli)
    ```
-   Agent/frontend/templates/webapp/
+   Agent/frontend/webapp/
    ├── AIChatWidget.tsx        # WebApp-specifikus UI
    ├── AIChatPanel.tsx         # Dashboard-szerű layout
    ├── ChatHistory.tsx         # Korábbi beszélgetések
    ├── UserStats.tsx           # Töltési statisztikák
-   └── RouteP lanner.tsx        # Útvonaltervezés
+   └── RoutePlanner.tsx        # Útvonaltervezés
    ```
 
-3. **Közös Backend API**
-   - Mindkét platform ugyanazt a `backend/server.js`-t használja
-   - Session management: PostgreSQL-ben tárolva
-   - User-specific context: Felhasználói adatok alapján
+2. **Közös Backend API**
+   - ✅ Mindkét platform ugyanazt a `Agent/backend/server.js`-t használja
+   - ⏳ Session management: PostgreSQL-ben tárolva (jövőbeli)
+   - ⏳ User-specific context: Felhasználói adatok alapján (jövőbeli)
 
-4. **Platform-Specifikus Styling**
-   - Website: Animált, marketing-fokuszú
-   - WebApp: Funkcionális, dashboard-szerű
+3. **Platform-Specifikus Styling**
+   - ✅ Website: Animált, marketing-fokuszú (webpage mappában)
+   - ⏳ WebApp: Funkcionális, dashboard-szerű (jövőbeli)
+
+---
+
+## 🗑️ Törölt Fájlok (NEM Mobi-hoz tartoznak)
+
+### 1. `app/chat/page.tsx` (Törölve)
+**Miért törölve:** Dedikált teljes képernyős chat oldal - nem kell, csak a beágyazott widget van használatban.
+
+### 2. `app/api/chat/route.ts` (Törölve)
+**Miért törölve:** Next.js API route fallback - nem kell, mert van külön Agent backend Docker-ben.
+
+**Jelenlegi backend:** `Agent/backend/server.js` - ez a működő backend API.
 
 ---
 
 ## 🔗 Kapcsolódó Fájlok
 
-- **[../../components/AIChatWidget.tsx](../../components/AIChatWidget.tsx)** - Jelenlegi chat widget
-- **[../../components/AIChatPanel.tsx](../../components/AIChatPanel.tsx)** - Jelenlegi chat panel
-- **[../../components/ChartRenderer.tsx](../../components/ChartRenderer.tsx)** - Jelenlegi chart renderer
-- **[../backend/server.js](../backend/server.js)** - Backend API
+- **[webpage/AIChatWidget.tsx](webpage/AIChatWidget.tsx)** - ✅ Chat widget (webpage)
+- **[webpage/AIChatPanel.tsx](webpage/AIChatPanel.tsx)** - ✅ Chat panel (webpage)
+- **[webpage/ChartRenderer.tsx](webpage/ChartRenderer.tsx)** - ✅ Chart renderer (webpage)
+- **[../backend/server.js](../backend/server.js)** - ✅ Backend API
 - **[../shared/MCP_SHARED_CONTEXT.md](../shared/MCP_SHARED_CONTEXT.md)** - Shared resources
+- **[webapp/README.md](webapp/README.md)** - WebApp tervek (jövőbeli)
 
 ---
 
 ## 📝 Változtatási Történet
+
+### 2025. november 1. - v2.0.1 (Legutóbbi)
+- ✅ Komponensek áthelyezve: `components/` → `Agent/frontend/webpage/`
+- ✅ Webpage és webapp mappák létrehozása
+- ✅ `app/chat/page.tsx` törölve (nem kell)
+- ✅ `app/api/chat/route.ts` törölve (nem kell, van külön backend)
+- ✅ Import útvonalak frissítve: `@/Agent/frontend/webpage/...`
+- ✅ README.md fájlok létrehozva webpage és webapp mappákhoz
 
 ### 2025. november 1. - v2.0.0
 - ✅ Frontend mappa létrehozása

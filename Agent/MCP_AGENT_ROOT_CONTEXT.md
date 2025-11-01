@@ -6,7 +6,7 @@
 **Szinkronizáció:** Jövőbeli cél, hogy ez a fájl API végponton keresztül (FastAPI + REST API vagy hasonló) hostolva legyen, így ha egy fejlesztő (pl. Cursor használó) frissíti, akkor a másik fejlesztő (pl. Warp használó) ugyanazon projektmappájában lévő .md fájl is automatikusan frissül. Így minden AI asszisztens (Cursor, Warp, stb.) mindig naprakész, megosztott tudásbázissal rendelkezik.
 
 **Utolsó frissítés:** 2025. november 1.  
-**Verzió:** 2.0.0  
+**Verzió:** 2.0.1  
 **Projekt:** Mobilien AI Agent (Mobi)
 
 ---
@@ -17,7 +17,10 @@
 Agent/
 ├── backend/                    # Backend logika (Node.js + Express)
 ├── shared/                     # Megosztott erőforrások (prompts, knowledge, schemas)
-├── frontend/                   # Frontend template-ek (WebApp előkészítés)
+├── frontend/                   # Frontend komponensek (webpage + webapp)
+│   ├── webpage/               # Weboldal komponensek (működő)
+│   ├── webapp/                # WebApp komponensek (jövőbeli, üres)
+│   └── templates/             # Általános dokumentáció
 ├── migrations/                 # PostgreSQL adatbázis migrációk
 ├── node_modules/               # npm függőségek (gitignore-ban)
 ├── context/                    # LEGACY - régi context fájlok (backward compatibility)
@@ -171,13 +174,21 @@ curl http://localhost:3000/health
 
 ## 🔗 Kapcsolódó MCP Context Fájlok
 
-- **[MCP_BACKEND_CONTEXT.md](MCP_BACKEND_CONTEXT.md)** - Backend logika (server, config, openrouter)
-- **[MCP_SHARED_CONTEXT.md](MCP_SHARED_CONTEXT.md)** - Megosztott erőforrások (prompts, knowledge, schemas)
-- **[MCP_FRONTEND_CONTEXT.md](MCP_FRONTEND_CONTEXT.md)** - Frontend template-ek (WebApp előkészítés)
+- **[backend/MCP_BACKEND_CONTEXT.md](backend/MCP_BACKEND_CONTEXT.md)** - Backend logika (server, config, openrouter)
+- **[shared/MCP_SHARED_CONTEXT.md](shared/MCP_SHARED_CONTEXT.md)** - Megosztott erőforrások (prompts, knowledge, schemas)
+- **[frontend/MCP_FRONTEND_CONTEXT.md](frontend/MCP_FRONTEND_CONTEXT.md)** - Frontend komponensek (webpage, webapp)
 
 ---
 
 ## 📝 Változtatási Történet
+
+### 2025. november 1. - v2.0.1 Frontend Átrendezés
+- ✅ Frontend komponensek áthelyezve: `components/` → `Agent/frontend/webpage/`
+- ✅ Webpage és webapp mappák létrehozása (multi-platform support)
+- ✅ `app/chat/page.tsx` törölve (nem kell, csak beágyazott widget)
+- ✅ `app/api/chat/route.ts` törölve (nem kell, van külön Agent backend)
+- ✅ Import útvonalak frissítve
+- ✅ MCP dokumentáció frissítve
 
 ### 2025. november 1. - v2.0.0 Refactoring
 - ✅ Moduláris architektúra bevezetése

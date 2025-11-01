@@ -1,7 +1,7 @@
 # 🔄 Agent Refactoring - Modular Architecture
 
 **Dátum:** 2025. november 1.  
-**Verzió:** 2.0.0
+**Verzió:** 2.0.1 (legutóbbi frissítés: v2.0.1 Frontend átrendezés)
 
 ## 📋 Összefoglaló
 
@@ -26,7 +26,7 @@ Agent/
 └── package.json
 ```
 
-### Utána (v2.0)
+### Utána (v2.0.1)
 ```
 Agent/
 ├── backend/                    # ✨ ÚJ
@@ -42,7 +42,14 @@ Agent/
 │   └── schemas/
 │       └── chart-schema.json
 ├── frontend/                   # ✨ ÚJ
-│   └── templates/
+│   ├── webpage/               # Weboldal komponensek (aktuális)
+│   │   ├── AIChatWidget.tsx
+│   │   ├── AIChatPanel.tsx
+│   │   ├── ChartRenderer.tsx
+│   │   └── README.md
+│   ├── webapp/                # WebApp komponensek (jövőbeli)
+│   │   └── README.md
+│   └── templates/             # Általános dokumentáció
 │       └── README.md
 ├── migrations/
 ├── .env
