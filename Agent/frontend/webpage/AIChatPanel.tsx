@@ -1,5 +1,5 @@
 "use client";
-import AIChatWidget from "@/components/AIChatWidget";
+import AIChatWidget from "./AIChatWidget";
 
 export default function AIChatPanel() {
   return (
@@ -98,5 +98,4 @@ export default function AIChatPanel() {
     </div>
   );
 }
-
 
