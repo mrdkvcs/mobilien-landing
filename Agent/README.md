@@ -1,97 +1,217 @@
-# Mobilien AI Agent - OpenRouter GPT API
+# 🤖 Mobilien AI Agent (Mobi)
 
-Ez a mappa a Mobilien AI Agent szerverét tartalmazza, amely OpenRouter GPT API-t használ.
+Mobi az e-mobilitási asszisztens, amely segít az elektromos járművek töltésével, árazással és e-mobilitási kérdésekkel kapcsolatban.
 
-## Fájlok
+## 📁 Projekt Struktúra
 
-- `server.js` - Express szerver OpenRouter GPT API integrációval
-- `config.js` - Konfigurációs beállítások
-- `package.json` - Node.js függőségek
-- `test-api.js` - API kapcsolat tesztelése
-- `.env.example` - Példa környezeti változók fájl
-- `README.md` - Ez a dokumentáció
+```
+Agent/
+├── backend/                    # Backend logika (Node.js + Express)
+│   ├── server.js              # Fő szerver fájl
+│   ├── config.js              # Konfiguráció
+│   └── openrouter.js          # OpenRouter API helper
+│
+├── shared/                     # Megosztott erőforrások
+│   ├── prompts/               # AI system prompt-ok
+│   │   └── mobi-system-prompt.txt
+│   ├── knowledge/             # Tudásbázis
+│   │   ├── context-graph.json
+│   │   └── main-questions.md
+│   └── schemas/               # JSON sémák
+│       └── chart-schema.json
+│
+├── frontend/                   # Frontend template-ek
+│   └── templates/
+│       └── README.md          # Frontend használati útmutató
+│
+├── migrations/                 # Adatbázis migrációk
+│   └── 002_create_context_table.sql
+│
+├── .env                       # Environment változók
+├── package.json               # Node.js függőségek
+└── README.md                  # Ez a fájl
+```
 
-## Telepítés
+## 🚀 Gyors Kezdés
 
-1. Telepítsd a függőségeket:
+### 1. Telepítés
+
 ```bash
 cd Agent
 npm install
 ```
 
-2. Hozz létre egy `.env` fájlt a gyökérkönyvtárban (vagy használd a `key.env`-t):
+### 2. Environment beállítása
+
+Hozz létre egy `.env` fájlt az `Agent/` mappában:
+
 ```env
-OPENROUTER_API_KEY=your_openrouter_api_key_here
-DATABASE_URL=postgresql://username:password@localhost:5432/mobilien
+# OpenRouter API
+OPENROUTER_API_KEY=sk-or-v1-your-api-key-here
+GPT_MODEL=openai/gpt-oss-20b:free
+
+# Database
+DATABASE_URL=postgresql://user:password@host:5432/database
+
+# Server
 PORT=3000
-GPT_MODEL=openai/gpt-4-turbo
 ```
 
-## OpenRouter API Kulcs beszerzése
-
-1. Regisztrálj az [OpenRouter](https://openrouter.ai/) oldalán
-2. Lépj be és menj a [Keys](https://openrouter.ai/keys) oldalra
-3. Hozz létre egy új API kulcsot
-4. Másold be a `.env` fájlba
-
-## Elérhető GPT modellek
-
-Az OpenRouter-en keresztül elérhető GPT modellek:
-- `openai/gpt-4-turbo` - GPT-4 Turbo (ajánlott)
-- `openai/gpt-4` - GPT-4
-- `openai/gpt-4o` - GPT-4 Optimized
-- `openai/gpt-4o-mini` - GPT-4 Optimized Mini
-- `openai/gpt-3.5-turbo` - GPT-3.5 Turbo (olcsóbb)
-
-## Használat
-
-### Szerver indítása
+### 3. Szerver indítása
 
 ```bash
-# Fejlesztői mód (auto-reload)
+# Development mode (nodemon)
 npm run dev
 
-# Normál indítás
+# Production mode
 npm start
 ```
 
-### API Endpoint
+## 📡 API Endpoints
 
-A szerver elindul a `http://localhost:3000` címen (vagy a megadott PORT-on).
-
+### Chat Endpoint
 **POST** `/api/chat`
+
+Request:
 ```json
 {
-  "message": "Mennyibe kerül az elektromos autó töltése?"
+  "message": "Mennyibe kerül a töltés?"
 }
 ```
 
-Válasz:
+Response:
 ```json
 {
-  "reply": "Az AI válasza..."
+  "reply": "A Mobiliti töltés teljesen ingyenes..."
 }
 ```
 
-## Tesztelés
+### Newsletter Endpoint
+**POST** `/api/newsletter`
+
+Request:
+```json
+{
+  "email": "user@example.com",
+  "source": "homepage"
+}
+```
+
+Response:
+```json
+{
+  "success": true,
+  "id": 123
+}
+```
+
+### Health Check
+**GET** `/health`
+
+Response:
+```json
+{
+  "status": "ok",
+  "timestamp": "2025-11-01T20:00:00.000Z"
+}
+```
+
+## 🧠 AI System Prompt
+
+A Mobi system prompt-ja a `shared/prompts/mobi-system-prompt.txt` fájlban található. Ez a fájl határozza meg:
+- Mobi személyiségét és viselkedését
+- Válasz formázási szabályokat (Markdown, táblázatok)
+- Grafikon generálási utasításokat
+- Kontextus használati szabályokat
+
+**Módosítás:** Szerkeszd a `mobi-system-prompt.txt` fájlt, majd indítsd újra a szervert.
+
+## 📊 Tudásbázis
+
+### Knowledge Base
+A `shared/knowledge/` mappa tartalmazza:
+- **context-graph.json**: Előre definiált grafikon adatok (pl. EV töltési árak)
+- **main-questions.md**: Top 10 gyakori kérdés magyar EV felhasználóktól
+
+### Tudásbázis bővítése
+1. Adj hozzá új JSON fájlokat a `shared/knowledge/` mappához
+2. Frissítsd a `backend/server.js`-t az új adatok betöltéséhez
+3. Módosítsd a system prompt-ot, ha szükséges
+
+## 🎨 Frontend Integráció
+
+A frontend komponensek template-jei a `frontend/templates/` mappában találhatók. Részletek: [Frontend README](frontend/templates/README.md)
+
+### Szükséges npm package-ek (frontend):
+```bash
+npm install react-markdown remark-gfm recharts lucide-react
+npm install -D @tailwindcss/typography
+```
+
+## 🔧 Konfiguráció
+
+### Elérhető modellek (OpenRouter)
+- `openai/gpt-oss-20b:free` (ingyenes, rate limited)
+- `openai/gpt-4o-mini` (fizetős, gyors)
+- `openai/gpt-4-turbo` (fizetős, legjobb minőség)
+
+Módosítsd a `GPT_MODEL` változót a `.env` fájlban.
+
+### CORS beállítások
+A `backend/config.js` fájlban állíthatod be az engedélyezett origin-eket:
+```javascript
+corsOrigins: [
+  'https://mobilien.app',
+  'https://www.mobilien.app',
+  'http://localhost:3000'
+]
+```
+
+## 🐳 Docker Deployment
 
 ```bash
-node test-api.js
+# Build
+docker build -t mobilien-agent .
+
+# Run
+docker run -p 3000:3000 --env-file .env mobilien-agent
 ```
 
-## Konfiguráció
+## 📝 Scripts
 
-A `config.js` fájlban módosíthatod:
-- API kulcsot
-- GPT modellt
-- Hőmérsékletet (temperature)
-- Max tokeneket
-- CORS beállításokat
-- Adatbázis kapcsolatot
+```bash
+npm start        # Start production server
+npm run dev      # Start development server (nodemon)
+npm test         # Run tests (if available)
+```
 
-## Megjegyzések
+## 🔄 Jövőbeli Fejlesztések
 
-- Az API kulcs biztonságos tárolása érdekében használd a `.env` fájlt
-- A `.env` fájl nincs verziókövetés alatt (.gitignore)
-- A szerver automatikusan betölti a kontextus adatokat a PostgreSQL-ből
-- CORS beállítások production domainekre vannak konfigurálva
+- [ ] Session management PostgreSQL-ben
+- [ ] Multi-platform support (WebApp + Website)
+- [ ] Function calling / Tool use
+- [ ] Real-time töltőállomás adatok integráció
+- [ ] Útvonaltervezés EV-kkel
+- [ ] Felhasználói statisztikák és dashboard
+
+## 📚 Dokumentáció
+
+- [Migration Guide](MIGRATION_GUIDE.md) - Mistral → OpenRouter migráció
+- [Frontend Templates](frontend/templates/README.md) - Frontend komponensek
+
+## 🤝 Hozzájárulás
+
+1. Fork the repo
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## 📄 Licenc
+
+Proprietary - Mobilien.app
+
+---
+
+**Készítette:** Mobilien Team  
+**Utolsó frissítés:** 2025. november 1.

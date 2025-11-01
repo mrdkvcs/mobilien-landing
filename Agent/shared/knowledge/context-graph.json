@@ -1,0 +1,43 @@
+{
+  "graphId": "ev-charging-prices-comparison",
+  "title": "EV Töltési Árak Összehasonlítása (2025)",
+  "description": "Különböző töltőszolgáltatók átlagos kWh árai Magyarországon",
+  "type": "bar",
+  "data": [
+    {
+      "name": "Mobiliti",
+      "price": 0,
+      "currency": "Ft/kWh"
+    },
+    {
+      "name": "MOL Plugee",
+      "price": 95,
+      "currency": "Ft/kWh"
+    },
+    {
+      "name": "E.ON Drive",
+      "price": 115,
+      "currency": "Ft/kWh"
+    },
+    {
+      "name": "Ionity",
+      "price": 149,
+      "currency": "Ft/kWh"
+    },
+    {
+      "name": "Tesla Supercharger",
+      "price": 125,
+      "currency": "Ft/kWh"
+    },
+    {
+      "name": "NKM",
+      "price": 89,
+      "currency": "Ft/kWh"
+    }
+  ],
+  "xAxis": "name",
+  "yAxis": "price",
+  "yAxisLabel": "Ár (Ft/kWh)",
+  "color": "#009fa9"
+}
+

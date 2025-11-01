@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mobi Chart Data Schema",
+  "description": "Schema for chart data used by ChartRenderer component",
+  "type": "object",
+  "required": ["type", "data", "xAxis", "yAxis"],
+  "properties": {
+    "graphId": {
+      "type": "string",
+      "description": "Unique identifier for the chart"
+    },
+    "title": {
+      "type": "string",
+      "description": "Chart title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Chart description"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["bar", "line", "pie"],
+      "description": "Chart type"
+    },
+    "data": {
+      "type": "array",
+      "description": "Array of data points",
+      "items": {
+        "type": "object",
+        "description": "Each data point must have 'name' and the field specified in yAxis"
+      }
+    },
+    "xAxis": {
+      "type": "string",
+      "description": "Field name for X axis (usually 'name')"
+    },
+    "yAxis": {
+      "type": "string",
+      "description": "Field name for Y axis (e.g., 'value', 'price', 'count')"
+    },
+    "yAxisLabel": {
+      "type": "string",
+      "description": "Label for Y axis"
+    },
+    "color": {
+      "type": "string",
+      "description": "Bar/line color in hex format (default: #009fa9)"
+    }
+  }
+}
+
