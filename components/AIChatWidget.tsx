@@ -102,7 +102,7 @@ export default function AIChatWidget() {
 
   return (
     <div className="max-w-4xl mx-auto mb+6">
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-[360px] flex flex-col">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-[435px] flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
           <div className="flex items-center gap-3">
