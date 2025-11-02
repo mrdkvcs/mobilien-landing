@@ -22,15 +22,19 @@
 3. **Példa:** Ha egy .md-ben 4 bekezdés van, de csak 2 változott, csak azt a 2 bekezdést módosítsd
 4. **Linkek, nem másolatok:** Ne másolj be teljes fájltartalmakat - használj linkeket és összefoglalókat
 5. **Dokumentáció frissítése:** 
-   - **FONTOS:** Csak akkor frissítsd az MCP .md fájlokat, **ha a felhasználó elfogadta a változtatásokat** (accept/keep all)
-   - Ne dokumentálj részmegoldásokat külön (3-4 prompt alatt kialakuló részeredmények)
+   - **FONTOS:** Csak akkor frissítsd az MCP .md fájlokat, ha:
+     - A felhasználó **explicit módon kéri** (pl. "dokumentáld", "frissítsd az MCP fájlt", `///doc.` parancs)
+     - **VAGY** ha a felhasználó **elfogadta a változtatásokat** (accept/keep all)
+   - Ne dokumentálj automatikusan, részmegoldásokat külön (3-4 prompt alatt kialakuló részeredmények)
    - Csak a végső, elfogadott változtatásokat dokumentáld
    - Gyakori workflow: 3-4 prompt → feladat megoldása → felhasználó elfogadja → utána dokumentáció frissítése
+   - Ha explicit kérés van (`///doc.` vagy hasonló), akkor azonnal dokumentálj
 6. **Változtatási történet:**
    - Csak utolsó 3-5 változtatás maradjon
-   - Formátum: `### Dátum - vVerzió - AI Típus (Cursor/Warp/Claude)`
+   - Formátum: `### vVerzió - YYYY-MM-DDTHH:mm:ssZ - AI Típus (Cursor/Warp/Claude)`
+   - Timestamp: ISO 8601 UTC formátum (pl. `2025-11-01T14:30:00Z`)
    - Rövid leírás checkbox-okkal (✅/⏳)
-7. **MCP_ACTUAL.md frissítése:** Minden elfogadott változtatás után frissítsd az `MCP_ACTUAL.md`-t (utolsó 3 változtatás)
+7. **MCP_ACTUAL.md frissítése:** Minden elfogadott változtatás után frissítsd az `MCP_ACTUAL.md`-t (utolsó 3 változtatás, timestamp-tel)
 8. **Törlés csak akkor**, ha:
    - A felhasználó explicit módon kéri
    - Elavult/történelmi információ, amit már nem használunk
