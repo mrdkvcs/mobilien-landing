@@ -32,12 +32,34 @@ CREATE TABLE IF NOT EXISTS newsletter_subscriptions (
 );
 `;
 
+// Ensure chat_messages table exists
+const ensureChatMessagesTableSQL = `
+CREATE TABLE IF NOT EXISTS chat_messages (
+  id SERIAL PRIMARY KEY,
+  session_id VARCHAR(255) NOT NULL,
+  role VARCHAR(20) NOT NULL CHECK (role IN ('user', 'assistant')),
+  content TEXT NOT NULL,
+  tokens_used INTEGER,
+  model VARCHAR(100),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON chat_messages(session_id);
+CREATE INDEX IF NOT EXISTS idx_chat_messages_created_at ON chat_messages(created_at DESC);
+`;
+
 (async () => {
   try {
     await pool.query(ensureNewsletterTableSQL);
     console.log('[server] Ensured newsletter_subscriptions table exists');
   } catch (err) {
     console.error('[server] Failed to ensure newsletter_subscriptions table:', err.message);
+  }
+  
+  try {
+    await pool.query(ensureChatMessagesTableSQL);
+    console.log('[server] Ensured chat_messages table exists');
+  } catch (err) {
+    console.error('[server] Failed to ensure chat_messages table:', err.message);
   }
 })();
 
@@ -170,7 +192,7 @@ app.post('/api/newsletter', async (req, res) => {
 // Chat endpoint
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message } = req.body;
+    const { message, sessionId } = req.body;
     
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Invalid message format' });
@@ -180,7 +202,25 @@ app.post('/api/chat', async (req, res) => {
       return res.status(500).json({ error: 'Missing API key' });
     }
 
+    // Generate session ID if not provided
+    const currentSessionId = sessionId || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
     console.log('[server] Processing message:', message);
+    console.log('[server] Session ID:', currentSessionId);
+
+    // Save user message to database
+    try {
+      await pool.query(
+        'INSERT INTO chat_messages (session_id, role, content, model) VALUES ($1, $2, $3, $4)',
+        [currentSessionId, 'user', message, config.openrouter.model]
+      );
+    } catch (dbError) {
+      console.error('[server] Failed to save user message:', dbError.message);
+      // Continue even if database save fails
+    }
+
+    // Load chat history for context (optional - for future conversation context)
+    // For now, we'll build the prompt from template only
 
     // Build system prompt from template
     let systemPrompt = systemPromptTemplate.replace(
@@ -210,11 +250,26 @@ app.post('/api/chat', async (req, res) => {
     });
 
     const reply = openrouter.getReplyText(response) || 'Sajnálom, nem tudok válaszolni.';
+    const tokensUsed = response.usage?.total_tokens || null;
     
     console.log('[server] Response received from OpenRouter API');
-    console.log('[server] Tokens used:', response.usage?.total_tokens || 'N/A');
+    console.log('[server] Tokens used:', tokensUsed || 'N/A');
+
+    // Save assistant reply to database
+    try {
+      await pool.query(
+        'INSERT INTO chat_messages (session_id, role, content, tokens_used, model) VALUES ($1, $2, $3, $4, $5)',
+        [currentSessionId, 'assistant', reply, tokensUsed, config.openrouter.model]
+      );
+    } catch (dbError) {
+      console.error('[server] Failed to save assistant message:', dbError.message);
+      // Continue even if database save fails
+    }
     
-    res.json({ reply });
+    res.json({ 
+      reply,
+      sessionId: currentSessionId 
+    });
   } catch (error) {
     console.error('[server] Server error:', error);
     res.status(500).json({ 
