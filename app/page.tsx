@@ -7,6 +7,9 @@ import {
   Clock,
   MessageSquareText,
   BarChart3,
+  DollarSign,
+  Route,
+  Bot,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,7 +21,6 @@ import Link from "next/link";
 export default function Home() {
   const [menuOpen, setMenuOpen] = React.useState(false);
   // References to sections for scrolling
-  const problemsRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
   const missionRef = useRef<HTMLElement>(null);
   const newsletterRef = useRef<HTMLElement>(null);
@@ -34,9 +36,7 @@ export default function Home() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash;
-      if (hash === "#problems" && problemsRef.current) {
-        problemsRef.current.scrollIntoView({ behavior: "smooth" });
-      } else if (hash === "#features" && featuresRef.current) {
+      if (hash === "#features" && featuresRef.current) {
         featuresRef.current.scrollIntoView({ behavior: "smooth" });
       } else if (hash === "#mission" && missionRef.current) {
         missionRef.current.scrollIntoView({ behavior: "smooth" });
@@ -72,12 +72,6 @@ export default function Home() {
           </div>
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
-            <button
-              onClick={() => scrollToSection(problemsRef)}
-              className="text-[#0C1D32] hover:text-[#007AAD] transition-colors"
-            >
-              Problémák
-            </button>
             <button
               onClick={() => scrollToSection(featuresRef)}
               className="text-[#0C1D32] hover:text-[#007AAD] transition-colors"
@@ -149,12 +143,6 @@ export default function Home() {
         {/* Mobile nav dropdown */}
         {menuOpen && (
           <nav className="md:hidden bg-[#FFFBFC] border-b border-[#D9E2E9] px-6 py-4 flex flex-col gap-4 shadow-lg animate-fade-in z-50">
-            <button
-              onClick={() => { scrollToSection(problemsRef); setMenuOpen(false); }}
-              className="text-[#0C1D32] text-lg font-medium text-left"
-            >
-              Problémák
-            </button>
             <button
               onClick={() => { scrollToSection(featuresRef); setMenuOpen(false); }}
               className="text-[#0C1D32] text-lg font-medium text-left"
@@ -235,78 +223,12 @@ export default function Home() {
         <AIChatPanel />
       </section>
 
-      {/* Problems Section */}
-      <section ref={problemsRef} id="problems" className="py-20 bg-[#FFFBFC]">
+      {/* Features Section */}
+      <section ref={featuresRef} id="features" className="py-20 bg-[#FFFBFC]">
         <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px]">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#0C1D32] mb-4">
               Válasz az e-mobilitási problémáira:
-            </h2>
-            <p className="text-[#0C1D32]/70 max-w-2xl mx-auto">
-              A jelenlegi elektromos jármű töltési infrastruktúra Magyarországon
-              számos kihívást jelent az elektromos járművek tulajdonosai
-              számára.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-white border border-[#D9E2E9] shadow-lg">
-              <CardContent className="pt-6">
-                <div className="bg-[#007AAD]/10 p-3 rounded-full w-fit mb-4">
-                  <Map className="h-6 w-6 text-[#007AAD]" />
-                </div>
-                <h3 className="text-xl font-bold text-[#0C1D32] mb-2">
-                  Széttagolt Infrastruktúra
-                </h3>
-                <p className="text-[#0C1D32]/70">
-                  A felhasználóknak jelenleg 5-6 különböző alkalmazásra van
-                  szükségük, hogy hozzáférjenek az összes töltőállomáshoz
-                  Magyarországon, ami frusztráló élményt teremt.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white border border-[#D9E2E9] shadow-lg">
-              <CardContent className="pt-6">
-                <div className="bg-[#007AAD]/10 p-3 rounded-full w-fit mb-4">
-                  <MessageSquareText className="h-6 w-6 text-[#007AAD]" />
-                </div>
-                <h3 className="text-xl font-bold text-[#0C1D32] mb-2">
-                  Félretájékoztatás
-                </h3>
-                <p className="text-[#0C1D32]/70">
-                  A töltőállomások képességeiről / működési státuszáról szóló megbízhatatlan
-                  információk időpazarláshoz és frusztrációhoz vezetnek az
-                  elektromos járművek tulajdonosai számára.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white border border-[#D9E2E9] shadow-lg">
-              <CardContent className="pt-6">
-                <div className="bg-[#007AAD]/10 p-3 rounded-full w-fit mb-4">
-                  <Clock className="h-6 w-6 text-[#007AAD]" />
-                </div>
-                <h3 className="text-xl font-bold text-[#0C1D32] mb-2">
-                  Valós Idejű Adatok Hiánya
-                </h3>
-                <p className="text-[#0C1D32]/70">
-                  A jelenlegi alkalmazások nem biztosítanak valós idejű, 
-                  teljes körű útvonaltervezést a jármű típusát, 
-                  töltöttségi szintjét és a legoptimálisabb kompatibilis töltési pontokat figyelembe véve.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section ref={featuresRef} id="features" className="py-20">
-        <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px]">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0C1D32] mb-4">
-              Fedezd fel az alkalmazás funkcióit
             </h2>
             <p className="text-[#0C1D32]/70 max-w-2xl mx-auto">
               A Mobilien összekapcsolja az ország összes töltőjét AI-alapú segítséggel. Foglaljon, töltsön és spóroljon – mindezt egyetlen alkalmazásból.
@@ -325,56 +247,49 @@ export default function Home() {
                       All-in-One Platform
                     </h3>
                     <p className="text-[#0C1D32]/70">
-                      Érje el az összes töltőállomást Magyarországon egyetlen
-                      intuitív alkalmazáson keresztül.
+                      Fedezze fel Magyarország összes nyilvános töltőállomását egyetlen, intuitív alkalmazásban.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-4">
                   <div className="bg-[#007AAD]/10 p-3 rounded-full h-fit">
-                    <MessageSquareText className="h-6 w-6 text-[#007AAD]" />
+                    <DollarSign className="h-6 w-6 text-[#007AAD]" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-[#0C1D32] mb-2">
-                      MI Asszisztens "Mobi"
+                      Dinamikus árazás
                     </h3>
                     <p className="text-[#0C1D32]/70">
-                      Kapjon szakértői útmutatást MI asszisztensünktől, amely a
-                      magyarországi elektromos jármű infrastruktúrára és iparági
-                      ismeretekre van specifikusan kiképezve.
+                      Töltsön kedvezőbb áron az alkalmazásban megjelölt időszakokban és töltőpontokon.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-4">
                   <div className="bg-[#007AAD]/10 p-3 rounded-full h-fit">
-                    <Clock className="h-6 w-6 text-[#007AAD]" />
+                    <Route className="h-6 w-6 text-[#007AAD]" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-[#0C1D32] mb-2">
-                      Valós Idejű Közösségi Frissítések
+                      Intelligens útvonaltervezés
                     </h3>
                     <p className="text-[#0C1D32]/70">
-                      Profitáljon a felhasználók által közölt valós idejű
-                      frissítésekből a töltőállomások állapotáról és
-                      elérhetőségéről.
+                      Beépített, költség- és időoptimalizált MI-alapú útvonaltervezés valós idejű adatok és egyéni vezetési szokások alapján, költségbecsléssel kiegészítve.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-4">
                   <div className="bg-[#007AAD]/10 p-3 rounded-full h-fit">
-                    <BarChart3 className="h-6 w-6 text-[#007AAD]" />
+                    <Bot className="h-6 w-6 text-[#007AAD]" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-[#0C1D32] mb-2">
-                      Intelligens Útvonaltervezés
+                      Az Ön e-mobilitási AI asszisztense – „Mobi"
                     </h3>
                     <p className="text-[#0C1D32]/70">
-                      MI-alapú útvonaltervezés, amely a költségek és a
-                      hatékonyság szempontjából optimalizált az Ön járműve és vezetési
-                      szokásai alapján.
+                      Kapjon személyre szabott útmutatást és valós idejű támogatást a magyar elektromos jármű-infrastruktúrára és iparági ismeretekre kiképzett MI-asszisztensünktől.
                     </p>
                   </div>
                 </div>
