@@ -1,0 +1,80 @@
+# Cursor IDE Project Rules - Mobilien Landing
+
+## 📋 Alapvető Szabályok
+
+### Dokumentáció Kezelés
+- **NE hozz létre .md fájlokat automatikusan** - csak akkor, ha a felhasználó explicit módon kéri
+- **NE hozz létre README.md, dokumentáció fájlokat** - ha nincs rá explicit kérés
+- Ha a felhasználó nem kér fájl létrehozást, **ne kérdezz rá** - csak akkor hozz létre, ha kifejezetten kéri
+
+### MCP (Model Context Protocol) Fájlok Frissítése
+
+#### Olvasási Sorrend (MINDIG KÖVETVE):
+1. **Először:** `.cursorrules` - Projekt szabályok és workflow
+2. **Másodszor:** `knowledge_base/MCP/MCP_ACTUAL.md` - Utolsó 3 változtatás (röviden összefoglalva)
+3. **Harmadszor:** Releváns MCP fájlok (az MCP_ACTUAL.md alapján, amely fájlokat kell olvasni)
+
+**Fontos:** Az `MCP_ACTUAL.md` meghatározza, hogy mely fájlokat kell olvasni, így nem kell mindent elolvasni minden alkalommal.
+
+#### Workflow az MCP fájlok frissítéséhez:
+1. **Módosítás előtt:** Olvasd el a megfelelő MCP fájlt (`knowledge_base/MCP/[modul]/MCP_[MODUL]_CONTEXT.md`)
+2. **Csak releváns szekciók:** Ne az egész fájlt olvasd el/módosítsd - csak a változott bekezdést/szekciót
+3. **Példa:** Ha egy .md-ben 4 bekezdés van, de csak 2 változott, csak azt a 2 bekezdést módosítsd
+4. **Linkek, nem másolatok:** Ne másolj be teljes fájltartalmakat - használj linkeket és összefoglalókat
+5. **Dokumentáció frissítése:** 
+   - **FONTOS:** Csak akkor frissítsd az MCP .md fájlokat, **ha a felhasználó elfogadta a változtatásokat** (accept/keep all)
+   - Ne dokumentálj részmegoldásokat külön (3-4 prompt alatt kialakuló részeredmények)
+   - Csak a végső, elfogadott változtatásokat dokumentáld
+   - Gyakori workflow: 3-4 prompt → feladat megoldása → felhasználó elfogadja → utána dokumentáció frissítése
+6. **Változtatási történet:**
+   - Csak utolsó 3-5 változtatás maradjon
+   - Formátum: `### Dátum - vVerzió - AI Típus (Cursor/Warp/Claude)`
+   - Rövid leírás checkbox-okkal (✅/⏳)
+7. **MCP_ACTUAL.md frissítése:** Minden elfogadott változtatás után frissítsd az `MCP_ACTUAL.md`-t (utolsó 3 változtatás)
+8. **Törlés csak akkor**, ha:
+   - A felhasználó explicit módon kéri
+   - Elavult/történelmi információ, amit már nem használunk
+
+#### MCP Fájlok Helye:
+- Minden MCP fájl: `Agent/knowledge_base/MCP/`
+- `MCP_ACTUAL.md`: Utolsó 3 változtatás tracking (mindig olvasd el először)
+- Automatikusan szinkronizálva a Nextcloud Desktop Client-tel
+- **NE használj sync scripteket** - a Nextcloud automatikusan szinkronizál
+
+### Projekt Struktúra
+- **Agent/** mappa: Backend + Frontend komponensek
+- **knowledge_base/MCP/**: MCP kontextus fájlok (Nextcloud szinkronizált)
+- **shared/**: Megosztott erőforrások (prompts, knowledge, schemas)
+- **backend/**: Express szerver, OpenRouter integráció
+- **frontend/**: React komponensek (webpage, webapp)
+
+### Kód Módosítások
+- **Mindig használd a meglévő struktúrát** - ne hozz létre új mappákat indokolatlanul
+- **Backend kód**: `Agent/backend/`
+- **Frontend komponensek**: `Agent/frontend/webpage/`
+- **Konfiguráció**: `Agent/backend/config.js`
+
+### Git és Verziókezelés
+- `knowledge_base/MCP/` mappa **gitignore-ban van** - ne próbáld commitolni
+- Csak a kód fájlokat és dokumentációt commitolj (README.md, stb.)
+
+### Best Practices
+- **MCP fájlok olvasása:** Mindig csak a releváns MCP fájlt/szekciót olvasd el (ne az összeset)
+- **MCP fájlok módosítása:** Csak a változott bekezdést/szekciót frissítsd (ne az egész fájlt)
+- **Dokumentáció időzítése:** Csak az elfogadott változtatások után dokumentálj (ne részmegoldásokat)
+- **Fájl funkciójának ismerete:** Minden MCP fájlnak van egy funkciója - csak a releváns fájlt használd
+- **Kapcsolódó fájlok:** Mindig hivatkozz a kapcsolódó fájlokra (útvonalak, linkek), ne másold be a tartalmakat
+- **Ne duplikáld információt** - ha már dokumentálva van MCP-ben, hivatkozz rá
+- **Használd a meglévő helper funkciókat** (openrouter.js, config.js)
+
+### Hiba Kezelés
+- Ha valami nem működik, **először ellenőrizd az MCP dokumentációt**
+- **Ne feltételezz dolgokat** - olvasd el a fájlokat
+
+## 🎯 Cél
+Ezek a szabályok biztosítják, hogy:
+- Ne készüljenek felesleges fájlok
+- Az MCP dokumentáció mindig naprakész legyen
+- A projekt struktúra konzisztens maradjon
+- A Nextcloud automatikus szinkronizáció zavartalanul működjön
+

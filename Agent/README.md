@@ -63,13 +63,8 @@ DATABASE_URL=postgresql://user:password@host:5432/database
 # Server
 PORT=3000
 
-# Nextcloud (for MCP file storage - optional)
-# Közös MCP fájlok tárolása az org-ban lévő MCP mappában
-# Mindenkinek saját fiókot és App Password-ot kell használnia
-NEXTCLOUD_URL=https://nextcloud.tail1897dd.ts.net
-NEXTCLOUD_USERNAME=saját_felhasználónév  # Saját Nextcloud fiók
-NEXTCLOUD_PASSWORD=saját-app-password  # Saját App Password (Beállítások → Biztonság → Alkalmazásjelszavak)
-NEXTCLOUD_MCP_PATH=MCP  # Org-ban megosztott MCP mappa
+# Note: MCP fájlok automatikusan szinkronizálva vannak a Nextcloud Desktop Client-tel
+# A knowledge_base/MCP/ mappa a Shared/MCP mappával van szinkronizálva
 ```
 
 ### 3. Szerver indítása
@@ -214,7 +209,6 @@ npm test         # Run tests (if available)
 
 ## 📚 Dokumentáció
 
-- [Migration Guide](MIGRATION_GUIDE.md) - Mistral → OpenRouter migráció
 - [Frontend Templates](frontend/templates/README.md) - Frontend komponensek
 
 ## 🤝 Hozzájárulás
