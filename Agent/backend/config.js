@@ -41,6 +41,14 @@ const config = {
     'gpt-4o': 'openai/gpt-4o',
     'gpt-4o-mini': 'openai/gpt-4o-mini',
   },
+
+  // Nextcloud settings (for MCP file storage)
+  nextcloud: {
+    url: process.env.NEXTCLOUD_URL || 'https://nextcloud.tail1897dd.ts.net',
+    username: process.env.NEXTCLOUD_USERNAME || 'sanyi',
+    password: process.env.NEXTCLOUD_PASSWORD || '',
+    mcpBasePath: process.env.NEXTCLOUD_MCP_PATH || 'MCP', // Base folder for MCP files
+  },
 };
 
 // Validation
@@ -49,6 +57,15 @@ if (!config.openrouter.apiKey) {
 } else {
   console.log('[config] ✅ OpenRouter API key configured');
   console.log('[config] 🤖 Using model:', config.openrouter.model);
+}
+
+// Nextcloud validation
+if (config.nextcloud.password) {
+  console.log('[config] ✅ Nextcloud configured');
+  console.log('[config] 📁 Nextcloud URL:', config.nextcloud.url);
+  console.log('[config] 👤 Nextcloud user:', config.nextcloud.username);
+} else {
+  console.warn('[config] ⚠️  Nextcloud not configured (NEXTCLOUD_PASSWORD missing from .env)');
 }
 
 module.exports = config;
