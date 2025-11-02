@@ -106,8 +106,8 @@ export default function AIChatWidget() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mb-6">
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-[460px] flex flex-col" style={{ maxHeight: '460px', height: '460px' }}>
+    <div className="max-w-4xl mx-auto mb-6 relative z-10">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-[460px] flex flex-col relative" style={{ maxHeight: '460px', height: '460px', zIndex: 10 }}>
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
           <div className="flex items-center gap-3">
@@ -134,13 +134,9 @@ export default function AIChatWidget() {
               return (
               <div
                 key={`message-${index}-${message.role}`}
-                className={`flex gap-3 motion-safe:animate-[fadeIn_.2s_ease-out] w-full ${
+                className={`flex gap-3 motion-safe:animate-[fadeIn_.2s_ease-out] w-full relative z-10 ${
                   message.role === "user" ? "justify-end" : "justify-start"
                 }`}
-                style={{
-                  visibility: 'visible',
-                  opacity: 1,
-                }}
               >
                 <div
                   className={`flex gap-3 max-w-[80%] ${
@@ -166,10 +162,6 @@ export default function AIChatWidget() {
                         ? "bg-blue-500 text-white"
                         : "bg-gray-100 text-gray-900"
                     }`}
-                    style={{
-                      visibility: 'visible',
-                      opacity: 1,
-                    }}
                   >
                     {message.role === "user" ? (
                       <p className="text-sm leading-relaxed whitespace-pre-wrap">
@@ -256,7 +248,8 @@ export default function AIChatWidget() {
             <button
               onClick={sendMessage}
               disabled={!inputValue.trim() || isLoading}
-              className="px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap"
+              className="px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap relative z-10"
+              style={{ opacity: (!inputValue.trim() || isLoading) ? 0.5 : 1 }}
             >
               <Send className="w-4 h-4" />
               <span>Küldés</span>
