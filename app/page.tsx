@@ -182,19 +182,20 @@ export default function Home() {
       </header>
 
       {/* Hero Section - Full-width image with overlay content, no spacing */}
-      <section className="relative m-0 p-0 h-[575px]">
+      <section className="relative m-0 p-0 h-[400px] md:h-[575px]">
         <div className="relative overflow-hidden h-full">
           <img src="/4.jpg" alt="Hero" className="block w-full h-full object-cover" style={{ objectPosition: 'center top' }} />
           <div className="absolute inset-0 bg-gradient-to-tr from-[#0C1D32]/80 via-[#0C1D32]/40 to-transparent"></div>
           <div className="absolute inset-0 flex justify-start items-start pt-16">
             <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px]">
-              <div>
+              {/* Desktop: Original content */}
+              <div className="hidden md:block">
                 <h1 className="text-white font-extrabold tracking-tight leading-[1.05] text-[clamp(2.25rem,5vw,5.5rem)] max-w-[50ch]">
                   Az All-in-One<br />
                   EV Töltő Megoldás
                 </h1>
               </div>
-              <div className="mt-44 grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+              <div className="hidden md:grid md:grid-cols-3 gap-8 lg:gap-12 mt-44">
                 <div className="text-white">
                   <h3 className="text-lg md:text-xl font-semibold mb-2">Töltőkeresés egyszerűen</h3>
                   <p className="text-white/90 text-sm md:text-base max-w-sm">Egy alkalmazás, amely összeköti Önt Magyarország összes EV töltőállomásával.</p>
@@ -212,6 +213,25 @@ export default function Home() {
                   <h3 className="text-lg md:text-xl font-semibold mb-2">Az Ön AI segítője</h3>
                   <p className="text-white/90 text-sm md:text-base max-w-sm">Mobi az Ön személyes AI ügynöke, aki segít eligazodni az e-mobilitás világában. Támogatja a töltéssel, útvonaltervezéssel és költségek optimalizálásával kapcsolatos döntéseiben.</p>
                 </div>
+              </div>
+              
+              {/* Mobile: Simplified content */}
+              <div className="md:hidden">
+                <h1 className="text-white font-bold text-2xl mb-14">
+                  Az e-mobilitás világában, könnyedén.
+                </h1>
+                <p className="text-white/90 text-base mb-4">
+                  Tedd egyszerűbbé az e-autózást – egy intelligens alkalmazással és segítőkész AI-asszisztenssel, aki veled tart az úton.
+                </p>
+                <a
+                  href="https://mobilien.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center rounded-xl text-white px-6 py-3 text-base font-semibold transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-500/30 shadow-md shadow-blue-500/20"
+                  style={{ background: "linear-gradient(to bottom right, #3b82f6, #06b6d4)" }}
+                >
+                  Irány az app
+                </a>
               </div>
             </div>
           </div>

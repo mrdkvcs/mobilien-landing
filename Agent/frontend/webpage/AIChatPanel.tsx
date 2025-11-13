@@ -1,9 +1,12 @@
 "use client";
+import { useState } from "react";
 import AIChatWidget from "./AIChatWidget";
 
 export default function AIChatPanel() {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   return (
-    <div className="relative w-full overflow-hidden min-h-[500px]">
+    <div className={`relative w-full overflow-hidden transition-all duration-300 ${isExpanded ? 'min-h-[500px] md:min-h-[625px]' : 'min-h-auto'}`}>
       {/* Base gradient background */}
       <div
         className="absolute inset-0"
@@ -77,9 +80,9 @@ export default function AIChatPanel() {
       />
 
       {/* Foreground content spacing */}
-      <div className="relative pt-10 md:pt-12 pb-0 z-10">
-        <div className="w-[min(96%,1180px)] mx-auto">
-          <AIChatWidget />
+      <div className="relative pt-10 md:pt-12 pb-0 z-10 transition-all duration-300">
+        <div className="w-full md:w-[min(96%,1180px)] mx-auto">
+          <AIChatWidget isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
         </div>
       </div>
     </div>
