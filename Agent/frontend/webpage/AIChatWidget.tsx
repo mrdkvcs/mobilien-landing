@@ -174,8 +174,8 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
           </div>
 
           {/* Messages Area */}
-          <div ref={messagesContainerRef} className={`flex-1 overflow-y-auto overflow-x-hidden py-4 sm:py-6 messages-scroll ${isExpanded ? 'block' : 'hidden'}`} style={{ maxHeight: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'calc(585px - 160px)' : 'calc(460px - 160px)', height: 'auto' }}>
-            <div className="px-4 sm:px-6 space-y-4">
+          <div ref={messagesContainerRef} className={`flex-1 overflow-y-auto overflow-x-hidden py-4 sm:py-6 messages-scroll ${isExpanded ? 'block' : 'hidden'}`} style={{ maxHeight: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'calc(585px - 160px)' : 'calc(460px - 160px)', height: 'auto', overflowX: 'hidden', maxWidth: '100%' }}>
+            <div className="px-4 sm:px-6 space-y-4" style={{ maxWidth: '100%', overflowX: 'hidden' }}>
               {messages.map((message, index) => (
                 <div
                   key={`message-${index}-${message.role}`}
@@ -191,7 +191,7 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
                   
                   <div className={`flex flex-col max-w-[85%] sm:max-w-[75%] ${
                     message.role === "user" ? "items-end" : "items-start"
-                  }`}>
+                  }`} style={{ maxWidth: '100%', overflowX: 'hidden' }}>
                     <div className={`px-4 py-2.5 sm:py-3 rounded-3xl backdrop-blur-xl ${
                       message.role === "assistant"
                         ? "border border-white/10 rounded-tl-md"
@@ -199,8 +199,17 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
                     }`}
                     style={message.role === "assistant" ? {
                       backgroundColor: 'rgba(24, 24, 27)',
-                      color: 'rgba(247, 247, 248)'
-                    } : undefined}>
+                      color: 'rgba(247, 247, 248)',
+                      maxWidth: '100%',
+                      overflowX: 'hidden',
+                      wordWrap: 'break-word',
+                      wordBreak: 'break-word'
+                    } : {
+                      maxWidth: '100%',
+                      overflowX: 'hidden',
+                      wordWrap: 'break-word',
+                      wordBreak: 'break-word'
+                    }}>
                       {message.role === "user" ? (
                         <p className="text-base leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(247, 247, 248)' }}>{message.content}</p>
                       ) : (
@@ -230,7 +239,7 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
                                     {children}
                                   </code>
                                 ) : (
-                                  <pre className="bg-white/10 p-3 rounded overflow-x-auto border border-white/10">
+                                  <pre className="bg-white/10 p-3 rounded border border-white/10" style={{ overflowX: typeof window !== 'undefined' && window.innerWidth < 640 ? 'hidden' : 'auto', maxWidth: '100%', wordBreak: 'break-word', whiteSpace: typeof window !== 'undefined' && window.innerWidth < 640 ? 'pre-wrap' : 'pre' }}>
                                     <code className={className} {...props}>
                                       {children}
                                     </code>
@@ -275,9 +284,9 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
           </div>
 
           {/* Input Area - Modern Style */}
-          <div className="backdrop-blur-xl bg-black/40 border-t border-white/10 mt-auto" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)' }}>
-            <div className="px-4 sm:px-6 pt-2 sm:pt-3 pb-2 sm:pb-3" style={{ paddingBottom: 'calc(0.5rem - 3px)' }}>
-              <div className="flex gap-2 items-center">
+          <div className="backdrop-blur-xl bg-black/40 border-t border-white/10 mt-auto" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)', overflowX: 'hidden', maxWidth: '100%' }}>
+            <div className="px-4 sm:px-6 pt-2 sm:pt-3 pb-2 sm:pb-3" style={{ paddingBottom: 'calc(0.5rem - 3px)', overflowX: 'hidden', maxWidth: '100%' }}>
+              <div className="flex gap-2 items-center" style={{ maxWidth: '100%', overflowX: 'hidden' }}>
                 <div className="flex-1 relative flex items-center">
                   <textarea
                     ref={textareaRef}
@@ -374,6 +383,10 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
             color: rgba(247, 247, 248) !important;
             font-size: 1rem !important;
             font-weight: normal !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            word-wrap: break-word !important;
+            word-break: break-word !important;
           }
           .prose strong {
             font-weight: 600 !important;
@@ -383,20 +396,40 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
             font-size: 1rem !important;
             font-weight: normal !important;
             color: rgba(247, 247, 248) !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
           }
           .prose code {
             background: transparent !important;
             color: rgba(247, 247, 248) !important;
             font-size: 1rem !important;
             padding: 0 !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            word-break: break-word !important;
+            white-space: pre-wrap !important;
+          }
+          .prose pre {
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            word-break: break-word !important;
+            white-space: pre-wrap !important;
           }
           .prose a {
             color: rgba(247, 247, 248) !important;
             text-decoration: none !important;
+            max-width: 100% !important;
+            word-break: break-word !important;
           }
           .prose em {
             font-style: normal !important;
             color: rgba(247, 247, 248) !important;
+          }
+          .prose p, .prose ul, .prose ol, .prose li {
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            word-wrap: break-word !important;
+            word-break: break-word !important;
           }
         }
       `}</style>
