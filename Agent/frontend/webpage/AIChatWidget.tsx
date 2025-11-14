@@ -135,6 +135,13 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
     }
   };
 
+  const handleTextareaFocus = () => {
+    // Automatikusan nyisd ki a panelt, ha összecsukott állapotban van
+    if (!isExpanded) {
+      setIsExpanded(true);
+    }
+  };
+
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' });
   };
@@ -295,10 +302,11 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyPress}
+                    onFocus={handleTextareaFocus}
                     placeholder="Üzenet..."
                     className="w-full px-4 py-2.5 sm:py-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl outline-none resize-none text-white placeholder-slate-500 text-sm sm:text-base focus:border-blue-500/50 transition-all chat-input"
                     rows={1}
-                    style={{ maxHeight: '120px', minHeight: '42px', boxSizing: 'border-box', overflowX: 'hidden', wordWrap: 'break-word', wordBreak: 'break-word' }}
+                    style={{ maxHeight: '120px', minHeight: '42px', boxSizing: 'border-box', overflowX: 'hidden', wordWrap: 'break-word', wordBreak: 'break-word', fontSize: '16px' }}
                     disabled={isLoading}
                   />
                 </div>
