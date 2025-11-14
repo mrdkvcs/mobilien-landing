@@ -16,7 +16,7 @@ export default function AIChatPanel() {
   }, []);
 
   return (
-    <div className={`relative w-full overflow-hidden overflow-x-hidden transition-all duration-300 ${isExpanded ? 'min-h-[500px] md:min-h-[625px]' : (isMobile ? 'min-h-[120px]' : 'min-h-auto')}`}>
+    <div className={`relative w-full overflow-hidden overflow-x-hidden transition-all duration-300 ${isExpanded ? 'min-h-[500px] md:min-h-[625px]' : (isMobile ? 'min-h-[120px]' : 'min-h-auto')}`} style={{ boxSizing: 'border-box' }}>
       {/* Base gradient background */}
       <div
         className="absolute inset-0"
@@ -90,8 +90,8 @@ export default function AIChatPanel() {
       />
 
       {/* Foreground content spacing */}
-      <div className="relative pt-10 md:pt-12 pb-0 z-10 transition-all duration-300">
-        <div className="w-full md:w-[min(96%,1180px)] mx-auto">
+      <div className="relative pt-10 md:pt-12 pb-0 z-10 transition-all duration-300" style={{ boxSizing: 'border-box', overflowX: 'hidden' }}>
+        <div className="w-full md:w-[min(96%,1180px)] mx-auto px-2 md:px-0" style={{ boxSizing: 'border-box', overflowX: 'hidden' }}>
           <AIChatWidget isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
         </div>
       </div>

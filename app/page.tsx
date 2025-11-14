@@ -57,7 +57,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FFFBFC]">
+    <div className="min-h-screen bg-[#FFFBFC]" style={{ overflowX: 'hidden', boxSizing: 'border-box' }}>
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-[#D9E2E9] bg-[#FFFBFC]/80 backdrop-blur-sm">
         <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px] flex h-16 items-center justify-between">
@@ -239,7 +239,7 @@ export default function Home() {
       </section>
 
       {/* AI Chat Panel with animated gradient background */}
-      <section className="py-0">
+      <section className="py-0" style={{ overflowX: 'hidden', boxSizing: 'border-box' }}>
         <AIChatPanel />
       </section>
 

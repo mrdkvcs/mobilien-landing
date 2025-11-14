@@ -52,7 +52,7 @@ export default function ChartRenderer({ chartData }: { chartData: ChartData | st
   const barColor = data.color || '#009fa9';
 
   return (
-    <div className="my-3" style={{ background: 'transparent', backgroundColor: 'transparent' }}>
+    <div className="my-3" style={{ background: 'transparent', backgroundColor: 'transparent', overflowX: 'hidden', boxSizing: 'border-box' }}>
       {title && (
         <h3 className="text-base text-white-900 mb-1">{title}</h3>
       )}
@@ -60,7 +60,7 @@ export default function ChartRenderer({ chartData }: { chartData: ChartData | st
         <p className="text-xs text-white-600 mb-2">{description}</p>
       )}
 
-      <ResponsiveContainer width="100%" height={160} className="bg-transparent" style={{ background: 'transparent' }}>
+      <ResponsiveContainer width="100%" height={160} className="bg-transparent" style={{ background: 'transparent', overflowX: 'hidden', boxSizing: 'border-box' }}>
         <BarChart 
           data={chartDataArray} 
           margin={{ top: 6, right: 6, left: 6, bottom: 6 }}
