@@ -1,12 +1,22 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AIChatWidget from "./AIChatWidget";
 
 export default function AIChatPanel() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
-    <div className={`relative w-full overflow-hidden transition-all duration-300 ${isExpanded ? 'min-h-[500px] md:min-h-[625px]' : 'min-h-auto'}`}>
+    <div className={`relative w-full overflow-hidden overflow-x-hidden transition-all duration-300 ${isExpanded ? 'min-h-[500px] md:min-h-[625px]' : (isMobile ? 'min-h-[120px]' : 'min-h-auto')}`}>
       {/* Base gradient background */}
       <div
         className="absolute inset-0"

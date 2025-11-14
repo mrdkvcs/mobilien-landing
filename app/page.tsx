@@ -217,7 +217,7 @@ export default function Home() {
               
               {/* Mobile: Simplified content */}
               <div className="md:hidden">
-                <h1 className="text-white font-bold text-3xl mb-18">
+                <h1 className="text-white font-bold text-3xl mb-16">
                   Az e-mobilitás világában, könnyedén.
                 </h1>
                 <p className="text-white/90 text-base mb-4">

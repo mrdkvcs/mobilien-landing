@@ -140,8 +140,8 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto mb-0 relative z-10">
-      <div className={`rounded-t-2xl overflow-hidden flex flex-col relative w-full transition-all duration-300 ${isExpanded ? 'h-[460px] md:h-[585px]' : 'h-auto'}`} style={{ zIndex: 10, maxHeight: isExpanded ? (typeof window !== 'undefined' && window.innerWidth >= 640 ? '585px' : '460px') : 'none', minHeight: isExpanded ? (typeof window !== 'undefined' && window.innerWidth >= 640 ? '585px' : '460px') : 'auto' }}>
+    <div className="w-full max-w-4xl mx-auto mb-0 relative z-10 overflow-x-hidden">
+      <div className={`rounded-t-2xl overflow-hidden flex flex-col relative w-full transition-all duration-300 ${isExpanded ? 'h-[460px] md:h-[585px]' : 'h-auto'}`} style={{ zIndex: 10, maxHeight: isExpanded ? (typeof window !== 'undefined' && window.innerWidth >= 640 ? '585px' : '460px') : 'none', minHeight: isExpanded ? (typeof window !== 'undefined' && window.innerWidth >= 640 ? '585px' : '460px') : 'auto', overflowX: 'hidden' }}>
         {/* Background */}
         <div className="absolute inset-0" style={{ backgroundColor: 'rgb(3, 14, 19)' }}></div>
 
@@ -174,7 +174,7 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
           </div>
 
           {/* Messages Area */}
-          <div ref={messagesContainerRef} className={`flex-1 overflow-y-auto py-4 sm:py-6 messages-scroll ${isExpanded ? 'block' : 'hidden'}`} style={{ maxHeight: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'calc(585px - 160px)' : 'calc(460px - 160px)', height: 'auto' }}>
+          <div ref={messagesContainerRef} className={`flex-1 overflow-y-auto overflow-x-hidden py-4 sm:py-6 messages-scroll ${isExpanded ? 'block' : 'hidden'}`} style={{ maxHeight: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'calc(585px - 160px)' : 'calc(460px - 160px)', height: 'auto' }}>
             <div className="px-4 sm:px-6 space-y-4">
               {messages.map((message, index) => (
                 <div
@@ -202,9 +202,9 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
                       color: 'rgba(247, 247, 248)'
                     } : undefined}>
                       {message.role === "user" ? (
-                        <p className="text-sm sm:text-base leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                        <p className="text-base leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(247, 247, 248)' }}>{message.content}</p>
                       ) : (
-                        <div className="text-sm sm:text-base leading-relaxed prose prose-sm max-w-none prose-headings:mt-3 prose-headings:mb-2 prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 prose-strong:font-semibold prose-table:text-sm prose-table:border-collapse prose-th:border prose-th:border-white/20 prose-th:bg-white/5 prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-td:border prose-td:border-white/20 prose-td:px-3 prose-td:py-2 prose-code:text-cyan-300 prose-code:bg-white/10 prose-code:px-1 prose-code:py-0.5 prose-code:rounded"
+                        <div className="text-base leading-relaxed prose prose-sm max-w-none md:prose-headings:mt-3 md:prose-headings:mb-2 prose-p:my-2 md:prose-ul:my-2 md:prose-ol:my-2 prose-li:my-0.5 prose-strong:font-semibold prose-strong:text-inherit prose-headings:text-inherit prose-headings:text-base prose-h1:text-base prose-h2:text-base prose-h3:text-base prose-h4:text-base prose-h5:text-base prose-h6:text-base prose-code:text-inherit prose-code:bg-transparent prose-code:px-0 prose-code:py-0 prose-code:rounded-none prose-a:text-inherit prose-em:text-inherit prose-ul:text-inherit prose-ol:text-inherit prose-li:text-inherit md:prose-table:text-sm md:prose-table:border-collapse md:prose-th:border md:prose-th:border-white/20 md:prose-th:bg-white/5 md:prose-th:px-3 md:prose-th:py-2 md:prose-th:text-left md:prose-th:font-semibold md:prose-td:border md:prose-td:border-white/20 md:prose-td:px-3 md:prose-td:py-2"
                         style={{ color: 'rgba(247, 247, 248)' }}>
                           <ReactMarkdown 
                             remarkPlugins={[remarkGfm]}
@@ -367,6 +367,37 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
         .messages-scroll {
           scrollbar-width: thin;
           scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.4);
+        }
+        /* Mobile: Unified text styling - only bold formatting allowed */
+        @media (max-width: 639px) {
+          .prose * {
+            color: rgba(247, 247, 248) !important;
+            font-size: 1rem !important;
+            font-weight: normal !important;
+          }
+          .prose strong {
+            font-weight: 600 !important;
+            color: rgba(247, 247, 248) !important;
+          }
+          .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+            font-size: 1rem !important;
+            font-weight: normal !important;
+            color: rgba(247, 247, 248) !important;
+          }
+          .prose code {
+            background: transparent !important;
+            color: rgba(247, 247, 248) !important;
+            font-size: 1rem !important;
+            padding: 0 !important;
+          }
+          .prose a {
+            color: rgba(247, 247, 248) !important;
+            text-decoration: none !important;
+          }
+          .prose em {
+            font-style: normal !important;
+            color: rgba(247, 247, 248) !important;
+          }
         }
       `}</style>
     </div>
