@@ -7,7 +7,7 @@ console.log('[config] Loading configuration from Agent/.env');
 const config = {
   // OpenRouter API settings
   openrouter: {
-    apiKey: process.env.OPENROUTER_API_KEY || process.env.AGENT_API_KEY,
+    apiKey: process.env.API_KEY,
     baseUrl: 'https://openrouter.ai/api/v1',
     model: process.env.GPT_MODEL || 'openai/gpt-4-turbo',
     defaultMaxTokens: 2000,
@@ -45,7 +45,7 @@ const config = {
 
 // Validation
 if (!config.openrouter.apiKey) {
-  console.warn('[config] WARNING: OPENROUTER_API_KEY not found in environment variables');
+  console.warn('[config] WARNING: API_KEY not found in environment variables');
 } else {
   console.log('[config] ✅ OpenRouter API key configured');
   console.log('[config] 🤖 Using model:', config.openrouter.model);

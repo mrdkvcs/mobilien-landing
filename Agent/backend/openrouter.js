@@ -18,7 +18,7 @@ async function chatCompletion(messages, options = {}) {
   } = options;
 
   if (!config.openrouter.apiKey) {
-    throw new Error('OPENROUTER_API_KEY is not configured');
+    throw new Error('API_KEY is not configured');
   }
 
   try {
