@@ -187,7 +187,7 @@ export default function Home() {
         <div className="relative overflow-hidden h-full">
           <img src="/4.jpg" alt="Hero" className="block w-full h-full object-cover" style={{ objectPosition: 'center top' }} />
           <div className="absolute inset-0 bg-gradient-to-tr from-[#0C1D32]/80 via-[#0C1D32]/40 to-transparent"></div>
-          <div className="absolute inset-0 flex justify-start items-start pt-16">
+          <div className="absolute inset-0 flex justify-start items-start pt-4 md:pt-8">
             <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px]">
               {/* Desktop: Original content */}
               <div className="hidden md:block">
