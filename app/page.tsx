@@ -196,7 +196,7 @@ export default function Home() {
                   EV Töltő Megoldás
                 </h1>
               </div>
-              <div className="hidden md:grid md:grid-cols-3 gap-8 lg:gap-12 mt-44">
+              <div className="hidden md:grid md:grid-cols-3 gap-8 lg:gap-12 mt-24">
                 <div className="text-white">
                   <h3 className="text-lg md:text-xl font-semibold mb-2">Töltőkeresés egyszerűen</h3>
                   <p className="text-white/90 text-sm md:text-base max-w-sm">Egy alkalmazás, amely összeköti Önt Magyarország összes EV töltőállomásával.</p>
@@ -218,7 +218,7 @@ export default function Home() {
               
               {/* Mobile: Simplified content */}
               <div className="md:hidden">
-                <h1 className="text-white font-bold text-3xl mb-16">
+                <h1 className="text-white font-bold text-3xl mb-8">
                   Az e-mobilitás világában, könnyedén.
                 </h1>
                 <p className="text-white/90 text-base mb-4">
