@@ -17,6 +17,7 @@ import NewsletterForm from "@/components/newsletter-form";
 import AIChatPanel from "@/Agent/frontend/webpage/AIChatPanel";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import ScrollHeader from "@/components/ScrollHeader";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -59,7 +60,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#FFFBFC]" style={{ overflowX: 'hidden', boxSizing: 'border-box' }}>
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-[#D9E2E9] bg-[#FFFBFC]/80 backdrop-blur-sm">
+      <ScrollHeader>
         <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px] flex h-16 items-center justify-between">
           <div className="flex items-center gap-1">
             <img
@@ -179,7 +180,7 @@ export default function Home() {
               </a>
           </nav>
         )}
-      </header>
+      </ScrollHeader>
 
       {/* Hero Section - Full-width image with overlay content, no spacing */}
       <section className="relative m-0 p-0 h-[400px] md:h-[575px]">

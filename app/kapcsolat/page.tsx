@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import ScrollHeader from "@/components/ScrollHeader";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -59,7 +60,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#FFFBFC]">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-[#D9E2E9] bg-[#FFFBFC]/80 backdrop-blur-sm">
+      <ScrollHeader>
         <div className="container flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-1">
             <img
@@ -87,7 +88,7 @@ export default function ContactPage() {
             </Link>
           </div>
         </div>
-      </header>
+      </ScrollHeader>
 
       <main className="min-h-screen" style={{ background: "linear-gradient(180deg,#F9FAFB, #FFFFFF)" }}>
         <section className="py-16 md:py-24">
