@@ -22,6 +22,31 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hu">
+      <head>
+        {/* Eruda Debug Console for iOS/Mobile Testing */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                
+                if (isIOS || isMobile) {
+                  const script = document.createElement('script');
+                  script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+                  script.onload = function() {
+                    if (window.eruda) {
+                      window.eruda.init();
+                      console.log('🐛 Eruda debug console loaded for iOS/Mobile');
+                    }
+                  };
+                  document.head.appendChild(script);
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"

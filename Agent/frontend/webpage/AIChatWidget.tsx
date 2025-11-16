@@ -30,6 +30,20 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
   const [sessionId, setSessionId] = useState<string | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  // File attachment states
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // Audio recording states
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSendingAudio, setIsSendingAudio] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+  const [recordedMimeType, setRecordedMimeType] = useState<string>('');
+  const [useWebSpeech, setUseWebSpeech] = useState(true);
+  const recognitionRef = useRef<any>(null);
 
   // Initialize session ID from localStorage
   useEffect(() => {
@@ -64,17 +78,75 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
     }
   }, [isExpanded]);
 
+  // File handling functions
+  const handleFileButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const newFiles = Array.from(e.target.files);
+      setAttachedFiles(prev => [...prev, ...newFiles]);
+      e.target.value = ''; // Reset input
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
+      const newFiles = Array.from(e.dataTransfer.files);
+      setAttachedFiles(prev => [...prev, ...newFiles]);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = (reader.result as string).split(',')[1];
+        resolve(base64String);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
   const sendMessage = async () => {
     const message = inputValue.trim();
-    if (!message || isLoading) return;
+    const hasFiles = attachedFiles.length > 0;
+    
+    if ((!message && !hasFiles) || isLoading) return;
 
     // Expand chat when sending message (both mobile and desktop)
     setIsExpanded(true);
 
+    // Ha van fájl, jelezzük az üzenetben
+    let messageContent = message;
+    if (hasFiles) {
+      const fileNames = attachedFiles.map(f => `📎 ${f.name}`).join('\n');
+      messageContent = message ? `${message}\n\n${fileNames}` : fileNames;
+    }
+
     // Add user message
     const userMessage: Message = { 
       role: "user", 
-      content: message,
+      content: messageContent,
       timestamp: new Date()
     };
     setMessages(prev => [...prev, userMessage]);
@@ -82,16 +154,63 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
     setIsLoading(true);
     setErrorMsg("");
 
-      try {
-        // Automatikus környezet felismerés
-        let API_URL = process.env.NEXT_PUBLIC_API_URL || 
-          (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
-            ? 'http://localhost:3000' 
-            : 'https://api.mobilien.app');
+    try {
+      // Automatikus környezet felismerés
+      let API_URL = process.env.NEXT_PUBLIC_API_URL || 
+        (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+          ? 'http://localhost:3000' 
+          : 'https://api.mobilien.app');
+      
+      // Remove trailing slash if exists
+      API_URL = API_URL.replace(/\/$/, '');
+      
+      if (hasFiles) {
+        // Fájlok base64-re konvertálása
+        const fileData = await Promise.all(
+          attachedFiles.map(async (file) => ({
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            data: await fileToBase64(file)
+          }))
+        );
         
-        // Remove trailing slash if exists
-        API_URL = API_URL.replace(/\/$/, '');
+        // Küldés a file-chat endpoint-ra
+        const response = await fetch(`${API_URL}/api/file-chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            message: message || '', 
+            files: fileData,
+            sessionId: sessionId || undefined 
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
         
+        // Store session ID if this is the first message
+        if (data.sessionId && !sessionId) {
+          setSessionId(data.sessionId);
+          localStorage.setItem('chat-session-id', data.sessionId);
+          console.log('[Chat] New session created:', data.sessionId);
+        }
+        
+        const aiMessage: Message = { 
+          role: "assistant", 
+          content: data.reply || "Sajnálom, nem tudtam elemezni a fájlokat.",
+          timestamp: new Date()
+        };
+        
+        setMessages(prev => [...prev, aiMessage]);
+        
+        // Fájlok törlése küldés után
+        setAttachedFiles([]);
+      } else {
+        // Normál szöveges üzenet
         const response = await fetch(`${API_URL}/api/chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -101,30 +220,281 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
           }),
         });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
 
-      const data = await response.json();
-      
-      // Store session ID if this is the first message
-      if (data.sessionId && !sessionId) {
-        setSessionId(data.sessionId);
-        localStorage.setItem('chat-session-id', data.sessionId);
-        console.log('[Chat] New session created:', data.sessionId);
+        const data = await response.json();
+        
+        // Store session ID if this is the first message
+        if (data.sessionId && !sessionId) {
+          setSessionId(data.sessionId);
+          localStorage.setItem('chat-session-id', data.sessionId);
+          console.log('[Chat] New session created:', data.sessionId);
+        }
+        
+        const aiMessage: Message = { 
+          role: "assistant", 
+          content: data.reply || "Sajnálom, nem tudok válaszolni.",
+          timestamp: new Date()
+        };
+        
+        setMessages(prev => [...prev, aiMessage]);
       }
-      
-      const aiMessage: Message = { 
-        role: "assistant", 
-        content: data.reply || "Sajnálom, nem tudok válaszolni.",
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       setErrorMsg("Hiba történt a kérés közben. Kérlek, próbáld újra.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Audio recording functions
+  const blobToBase64 = (blob: Blob): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = (reader.result as string).split(',')[1];
+        resolve(base64String);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  const sendTranscribedText = async (text: string) => {
+    setInputValue(text);
+    // Kis delay után küldés
+    setTimeout(() => {
+      sendMessage();
+    }, 100);
+  };
+
+  const sendAudioToWhisper = async (audioBlob: Blob) => {
+    setIsLoading(true);
+    setErrorMsg('');
+
+    const processingMessage: Message = {
+      role: 'user',
+      content: '🎤 Hang feldolgozása...',
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, processingMessage]);
+
+    try {
+      const base64Audio = await blobToBase64(audioBlob);
+      
+      // Audio formátum meghatározása
+      let audioFormat = 'webm';
+      if (audioBlob.type.includes('mp4')) {
+        audioFormat = 'mp4';
+      } else if (audioBlob.type.includes('mpeg') || audioBlob.type.includes('mp3')) {
+        audioFormat = 'mp3';
+      } else if (audioBlob.type.includes('wav')) {
+        audioFormat = 'wav';
+      }
+
+      // Automatikus környezet felismerés
+      let API_URL = process.env.NEXT_PUBLIC_API_URL || 
+        (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+          ? 'http://localhost:3000' 
+          : 'https://api.mobilien.app');
+      
+      API_URL = API_URL.replace(/\/$/, '');
+      
+      const response = await fetch(`${API_URL}/api/audio-chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          audioData: base64Audio,
+          audioFormat: audioFormat,
+          sessionId: sessionId || undefined 
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      // Update the processing message with transcribed text
+      if (data.transcribedText) {
+        setMessages(prev => {
+          const updated = [...prev];
+          updated[updated.length - 1].content = data.transcribedText;
+          return updated;
+        });
+      }
+
+      // Store session ID if this is the first message
+      if (data.sessionId && !sessionId) {
+        setSessionId(data.sessionId);
+        localStorage.setItem('chat-session-id', data.sessionId);
+      }
+      
+      const aiMessage: Message = {
+        role: 'assistant',
+        content: data.reply || 'Sajnálom, nem tudtam feldolgozni a hangot.',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('Audio processing error:', error);
+      setErrorMsg('Hiba történt a hang feldolgozása közben.');
+      setMessages(prev => prev.slice(0, -1)); // Remove processing message
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const startWebSpeech = async (SpeechRecognition: any) => {
+    const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
+    
+    recognition.lang = 'hu-HU';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      setIsRecording(true);
+    };
+
+    recognition.onresult = async (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setIsSendingAudio(true);
+      await sendTranscribedText(transcript);
+      setIsSendingAudio(false);
+    };
+
+    recognition.onerror = async (event: any) => {
+      if (event.error === 'network') {
+        // Ha network hiba, váltunk MediaRecorder-re
+        setUseWebSpeech(false);
+        setErrorMsg('');
+        setIsRecording(false);
+        
+        setTimeout(async () => {
+          await startRecording();
+        }, 100);
+        return;
+      }
+      
+      if (event.error === 'no-speech') {
+        setErrorMsg('Nem hallottam semmit. Próbáld újra!');
+      } else if (event.error === 'not-allowed') {
+        setErrorMsg('Mikrofon hozzáférés megtagadva.');
+      }
+      
+      setIsRecording(false);
+      setIsSendingAudio(false);
+    };
+
+    recognition.onend = () => {
+      setIsRecording(false);
+    };
+
+    recognition.start();
+  };
+
+  const startMediaRecorder = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    
+    setAudioChunks([]);
+    
+    // Automatikus formátum detektálás
+    let mimeType = 'audio/webm;codecs=opus'; // Desktop default
+    if (!MediaRecorder.isTypeSupported(mimeType)) {
+      if (MediaRecorder.isTypeSupported('audio/mp4')) {
+        mimeType = 'audio/mp4'; // iOS Safari
+      } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+        mimeType = 'audio/webm';
+      } else {
+        mimeType = '';
+      }
+    }
+
+    setRecordedMimeType(mimeType);
+    
+    const options: MediaRecorderOptions = mimeType ? { mimeType } : {};
+    const recorder = new MediaRecorder(stream, options);
+    setMediaRecorder(recorder);
+
+    const chunks: Blob[] = [];
+
+    recorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        chunks.push(event.data);
+      }
+    };
+
+    recorder.onstop = async () => {
+      const finalMimeType = recordedMimeType || recorder.mimeType || 'audio/webm';
+      const audioBlob = new Blob(chunks, { type: finalMimeType });
+      
+      if (audioBlob.size === 0) {
+        setErrorMsg('Nem sikerült rögzíteni a hangot. Próbáld újra!');
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
+      
+      setIsSendingAudio(true);
+      await sendAudioToWhisper(audioBlob);
+      setIsSendingAudio(false);
+      
+      stream.getTracks().forEach(track => track.stop());
+    };
+
+    recorder.start();
+    setIsRecording(true);
+  };
+
+  const startRecording = async () => {
+    try {
+      setErrorMsg('');
+
+      // iOS és Safari nem támogatja a Web Speech API-t
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      
+      if (isIOS || isSafari) {
+        await startMediaRecorder();
+        return;
+      }
+
+      // Web Speech API ellenőrzés (csak nem-iOS platformokon)
+      const SpeechRecognition = (window as any).SpeechRecognition || 
+                                (window as any).webkitSpeechRecognition;
+      
+      if (SpeechRecognition && useWebSpeech) {
+        await startWebSpeech(SpeechRecognition);
+      } else {
+        await startMediaRecorder();
+      }
+    } catch (error) {
+      console.error('Hiba a hang rögzítés indításakor:', error);
+      setErrorMsg('Nem sikerült elérni a mikrofont.');
+      setIsRecording(false);
+    }
+  };
+
+  const stopRecording = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+    
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+    }
+    
+    setIsRecording(false);
+  };
+
+  const toggleRecording = async () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      await startRecording();
     }
   };
 
@@ -293,8 +663,48 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
           </div>
 
           {/* Input Area - Modern Style */}
-          <div className="backdrop-blur-xl bg-black/40 border-t border-white/10 mt-auto" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)', overflowX: 'hidden', boxSizing: 'border-box' }}>
+          <div 
+            className="backdrop-blur-xl bg-black/40 border-t border-white/10 mt-auto" 
+            style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)', overflowX: 'hidden', boxSizing: 'border-box' }}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            {/* File list */}
+            {attachedFiles.length > 0 && (
+              <div className="px-4 sm:px-6 pt-2 flex flex-wrap gap-2">
+                {attachedFiles.map((file, index) => (
+                  <div key={index} className="flex items-center gap-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl px-3 py-1.5">
+                    <span className="text-xs text-white truncate max-w-[150px]">📎 {file.name}</span>
+                    <button
+                      onClick={() => removeFile(index)}
+                      className="text-slate-400 hover:text-white transition-colors"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {/* Drag & Drop overlay */}
+            {isDragging && (
+              <div className="absolute inset-0 bg-blue-500/20 backdrop-blur-sm border-2 border-blue-500 border-dashed rounded-t-2xl flex items-center justify-center z-50">
+                <div className="text-white text-lg font-semibold">📎 Húzd ide a fájlokat</div>
+              </div>
+            )}
+            
             <div className="px-4 sm:px-6 pt-2 sm:pt-3 pb-2 sm:pb-3" style={{ paddingBottom: 'calc(0.5rem - 3px)', overflowX: 'hidden', boxSizing: 'border-box' }}>
+              {/* Hidden file input */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileSelect}
+                multiple
+                accept=".txt,.pdf,.doc,.docx,.json,.csv,.md"
+                className="hidden"
+              />
+              
               <div className="flex gap-2 items-center" style={{ overflowX: 'hidden', boxSizing: 'border-box' }}>
                 <div className="flex-1 relative flex items-center">
                   <textarea
@@ -307,23 +717,35 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
                     className="w-full px-4 py-2.5 sm:py-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl outline-none resize-none text-white placeholder-slate-500 text-sm sm:text-base focus:border-blue-500/50 transition-all chat-input"
                     rows={1}
                     style={{ maxHeight: '120px', minHeight: '42px', boxSizing: 'border-box', overflowX: 'hidden', wordWrap: 'break-word', wordBreak: 'break-word', fontSize: '16px' }}
-                    disabled={isLoading}
+                    disabled={isLoading || isSendingAudio}
                   />
                 </div>
 
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <button className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center transition-all">
+                  <button 
+                    onClick={handleFileButtonClick}
+                    disabled={isLoading || isSendingAudio}
+                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
                     <Paperclip className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />
                   </button>
 
-                  {inputValue.trim() === '' ? (
-                    <button className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center transition-all">
-                      <Mic className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />
+                  {inputValue.trim() === '' && attachedFiles.length === 0 ? (
+                    <button 
+                      onClick={toggleRecording}
+                      disabled={isLoading || isSendingAudio}
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl border border-white/10 flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+                        isRecording 
+                          ? 'bg-red-500 hover:bg-red-600 animate-pulse' 
+                          : 'bg-white/5 hover:bg-white/10'
+                      }`}
+                    >
+                      <Mic className={`w-4 h-4 sm:w-5 sm:h-5 ${isRecording ? 'text-white' : 'text-slate-400'}`} />
                     </button>
                   ) : (
                     <button
                       onClick={sendMessage}
-                      disabled={isLoading}
+                      disabled={isLoading || isSendingAudio}
                       className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center shadow-lg shadow-blue-600/50 transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
                       <Send className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
