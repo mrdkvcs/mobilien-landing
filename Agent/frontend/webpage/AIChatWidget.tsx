@@ -44,6 +44,12 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
   const [recordedMimeType, setRecordedMimeType] = useState<string>('');
   const [useWebSpeech, setUseWebSpeech] = useState(true);
   const recognitionRef = useRef<any>(null);
+  const [audioLevel, setAudioLevel] = useState(0);
+  const [isAutoStopping, setIsAutoStopping] = useState(false);
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const isRecordingRef = useRef(false);
 
   // Initialize session ID from localStorage
   useEffect(() => {
@@ -446,6 +452,53 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
     
     setAudioChunks([]);
     
+    // Web Audio API setup for audio level detection
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    audioContextRef.current = audioContext;
+    
+    const source = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 256;
+    analyserRef.current = analyser;
+    
+    source.connect(analyser);
+    
+    // Audio level monitoring
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    let lastSoundTime = Date.now();
+    
+    const checkAudioLevel = () => {
+      if (!isRecordingRef.current) return;
+      
+      analyser.getByteFrequencyData(dataArray);
+      const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+      setAudioLevel(average);
+      
+      // Csend detektálás (threshold: 10)
+      if (average > 10) {
+        lastSoundTime = Date.now();
+        // Töröljük a csend timer-t ha beszélünk
+        if (silenceTimerRef.current) {
+          clearTimeout(silenceTimerRef.current);
+          silenceTimerRef.current = null;
+        }
+      } else {
+        // Ha 3 másodperce csend van
+        const silenceDuration = Date.now() - lastSoundTime;
+        if (silenceDuration > 3000 && !silenceTimerRef.current) {
+          // Automatikus stop indítása
+          silenceTimerRef.current = setTimeout(() => {
+            autoStopRecording();
+          }, 0);
+        }
+      }
+      
+      requestAnimationFrame(checkAudioLevel);
+    };
+    
+    isRecordingRef.current = true;
+    checkAudioLevel();
+    
     // Automatikus formátum detektálás
     let mimeType = 'audio/webm;codecs=opus'; // Desktop default
     if (!MediaRecorder.isTypeSupported(mimeType)) {
@@ -476,21 +529,40 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
       const finalMimeType = recordedMimeType || recorder.mimeType || 'audio/webm';
       const audioBlob = new Blob(chunks, { type: finalMimeType });
       
+      // Cleanup
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+      }
+      setAudioLevel(0);
+      
       if (audioBlob.size === 0) {
         setErrorMsg('Nem sikerült rögzíteni a hangot. Próbáld újra!');
         stream.getTracks().forEach(track => track.stop());
+        setIsAutoStopping(false);
         return;
       }
       
       setIsSendingAudio(true);
       await sendAudioToWhisper(audioBlob);
       setIsSendingAudio(false);
+      setIsAutoStopping(false);
       
       stream.getTracks().forEach(track => track.stop());
     };
 
     recorder.start();
     setIsRecording(true);
+  };
+
+  const autoStopRecording = async () => {
+    // Piros villogás fél másodpercig
+    setIsAutoStopping(true);
+    
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Stop recording
+    stopRecording();
   };
 
   const startRecording = async () => {
@@ -523,6 +595,12 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
   };
 
   const stopRecording = () => {
+    // Cleanup timers
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+    
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       recognitionRef.current = null;
@@ -532,6 +610,7 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
       mediaRecorder.stop();
     }
     
+    isRecordingRef.current = false;
     setIsRecording(false);
   };
 
@@ -776,17 +855,38 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
                   </button>
 
                   {inputValue.trim() === '' && attachedFiles.length === 0 ? (
-                    <button 
-                      onClick={toggleRecording}
-                      disabled={isLoading || isSendingAudio}
-                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl border border-white/10 flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                        isRecording 
-                          ? 'bg-red-500 hover:bg-red-600 animate-pulse' 
-                          : 'bg-white/5 hover:bg-white/10'
-                      }`}
-                    >
-                      <Mic className={`w-4 h-4 sm:w-5 sm:h-5 ${isRecording ? 'text-white' : 'text-slate-400'}`} />
-                    </button>
+                    isRecording ? (
+                      <button 
+                        onClick={stopRecording}
+                        disabled={isLoading || isSendingAudio}
+                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
+                      >
+                        {/* Audio waveform visualization */}
+                        <div className="absolute inset-0 flex items-center justify-center gap-0.5">
+                          {[...Array(5)].map((_, i) => (
+                            <div
+                              key={i}
+                              className={`w-0.5 rounded-full transition-all ${
+                                isAutoStopping ? 'bg-red-500' : 'bg-blue-500'
+                              }`}
+                              style={{
+                                height: `${Math.max(20, Math.min(80, audioLevel * (0.5 + i * 0.1)))}%`,
+                                animation: 'pulse 0.8s ease-in-out infinite',
+                                animationDelay: `${i * 0.1}s`
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={toggleRecording}
+                        disabled={isLoading || isSendingAudio}
+                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <Mic className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />
+                      </button>
+                    )
                   ) : (
                     <button
                       onClick={sendMessage}
