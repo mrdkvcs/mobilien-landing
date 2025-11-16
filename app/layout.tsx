@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import CookieBanner from "@/components/CookieBanner";
+import DebugConsole from "@/components/DebugConsole";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="hu">
+    <html lang="hu" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
@@ -32,30 +33,7 @@ export default function RootLayout({
           {children}
         </ThemeProvider>
         <CookieBanner />
-        
-        {/* Eruda Debug Console for iOS/Mobile Testing */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                
-                if (isIOS || isMobile) {
-                  const script = document.createElement('script');
-                  script.src = 'https://cdn.jsdelivr.net/npm/eruda';
-                  script.onload = function() {
-                    if (window.eruda) {
-                      window.eruda.init();
-                      console.log('🐛 Eruda debug console loaded for iOS/Mobile');
-                    }
-                  };
-                  document.head.appendChild(script);
-                }
-              })();
-            `,
-          }}
-        />
+        <DebugConsole />
       </body>
     </html>
   );

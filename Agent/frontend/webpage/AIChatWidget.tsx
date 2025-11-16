@@ -332,7 +332,9 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
     setMessages(prev => [...prev, processingMessage]);
 
     try {
+      console.log('📤 Converting audio to base64...');
       const base64Audio = await blobToBase64(audioBlob);
+      console.log('✅ Base64 conversion done, length:', base64Audio.length);
       
       // Audio formátum meghatározása
       let audioFormat = 'webm';
@@ -343,6 +345,9 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
       } else if (audioBlob.type.includes('wav')) {
         audioFormat = 'wav';
       }
+      
+      console.log('📊 Audio format detected:', audioFormat);
+      console.log('📤 Sending to /api/audio-chat...');
       
       // Next.js API route (relatív URL)
       const response = await fetch(`/api/audio-chat`, {
@@ -355,14 +360,20 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
         })
       });
 
+      console.log('📥 Response status:', response.status);
+
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        const errorData = await response.json();
+        console.error('❌ Backend error:', errorData);
+        throw new Error(errorData.error || `HTTP ${response.status}`);
       }
       
       const data = await response.json();
+      console.log('✅ Backend response received:', data);
       
       // Update the processing message with transcribed text
       if (data.transcribedText) {
+        console.log('✅ Transcribed text:', data.transcribedText);
         setMessages(prev => {
           const updated = [...prev];
           updated[updated.length - 1].content = data.transcribedText;
@@ -374,6 +385,7 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
       if (data.sessionId && !sessionId) {
         setSessionId(data.sessionId);
         localStorage.setItem('chat-session-id', data.sessionId);
+        console.log('✅ Session ID stored:', data.sessionId);
       }
       
       const aiMessage: Message = {
@@ -382,8 +394,9 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
         timestamp: new Date()
       };
       setMessages(prev => [...prev, aiMessage]);
+      console.log('✅ AI response added to messages');
     } catch (error) {
-      console.error('Audio processing error:', error);
+      console.error('❌ Audio processing error:', error);
       setErrorMsg('Hiba történt a hang feldolgozása közben.');
       setMessages(prev => prev.slice(0, -1)); // Remove processing message
     } finally {
@@ -441,7 +454,9 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
   };
 
   const startMediaRecorder = async () => {
+    console.log('🎙️ startMediaRecorder called');
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    console.log('✅ Microphone access granted');
     
     setAudioChunks([]);
     
@@ -450,11 +465,16 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
     if (!MediaRecorder.isTypeSupported(mimeType)) {
       if (MediaRecorder.isTypeSupported('audio/mp4')) {
         mimeType = 'audio/mp4'; // iOS Safari
+        console.log('📱 iOS detected, using audio/mp4');
       } else if (MediaRecorder.isTypeSupported('audio/webm')) {
         mimeType = 'audio/webm';
+        console.log('💻 Desktop detected, using audio/webm');
       } else {
         mimeType = '';
+        console.warn('⚠️ No specific mimeType supported, using default');
       }
+    } else {
+      console.log('💻 Desktop detected, using audio/webm;codecs=opus');
     }
 
     setRecordedMimeType(mimeType);
@@ -463,19 +483,34 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
     const recorder = new MediaRecorder(stream, options);
     setMediaRecorder(recorder);
 
+    console.log('✅ MediaRecorder created with mimeType:', recorder.mimeType);
+
     const chunks: Blob[] = [];
 
     recorder.ondataavailable = (event) => {
+      console.log('📦 ondataavailable fired, data size:', event.data.size);
       if (event.data.size > 0) {
         chunks.push(event.data);
+        console.log('✅ Audio chunk added, total chunks:', chunks.length);
+      } else {
+        console.warn('⚠️ Empty audio chunk received!');
       }
     };
 
     recorder.onstop = async () => {
+      console.log('🛑 MediaRecorder onstop fired');
+      console.log('📦 Total audio chunks collected:', chunks.length);
+      
       const finalMimeType = recordedMimeType || recorder.mimeType || 'audio/webm';
       const audioBlob = new Blob(chunks, { type: finalMimeType });
       
+      console.log('🎤 Audio blob created:');
+      console.log('  - Type:', audioBlob.type);
+      console.log('  - Size:', audioBlob.size, 'bytes');
+      console.log('  - Chunks used:', chunks.length);
+      
       if (audioBlob.size === 0) {
+        console.error('❌ Audio blob is EMPTY!');
         setErrorMsg('Nem sikerült rögzíteni a hangot. Próbáld újra!');
         stream.getTracks().forEach(track => track.stop());
         return;
@@ -486,10 +521,12 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
       setIsSendingAudio(false);
       
       stream.getTracks().forEach(track => track.stop());
+      console.log('🔇 Audio stream stopped');
     };
 
     recorder.start();
     setIsRecording(true);
+    console.log('🎙️ Recording started...');
   };
 
   const startRecording = async () => {
@@ -522,16 +559,21 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
   };
 
   const stopRecording = () => {
+    console.log('🛑 Stop recording called');
+    
     if (recognitionRef.current) {
+      console.log('🛑 Stopping Web Speech API');
       recognitionRef.current.stop();
       recognitionRef.current = null;
     }
     
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-      mediaRecorder.stop();
+      console.log('🛑 Stopping MediaRecorder, state:', mediaRecorder.state);
+      mediaRecorder.stop(); // Ez fogja triggerelni az onstop eseményt!
     }
     
     setIsRecording(false);
+    console.log('✅ isRecording set to false');
   };
 
   const toggleRecording = async () => {

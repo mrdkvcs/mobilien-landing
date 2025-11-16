@@ -13,16 +13,20 @@ export async function POST(request: NextRequest) {
     };
 
     if (!audioData || !audioFormat) {
+      console.error('❌ Missing audioData or audioFormat');
       return NextResponse.json({ error: 'Audio data and format required' }, { status: 400 });
     }
 
     console.log('🎤 Audio received, processing with OpenAI Whisper...');
+    console.log('🔑 OPEN_AI_KEY available:', !!process.env.OPEN_AI_KEY);
+    console.log('🔑 OPEN_AI_KEY length:', process.env.OPEN_AI_KEY?.length || 0);
     console.log('📊 Audio format:', audioFormat);
+    console.log('📦 Audio data length:', audioData?.length || 0);
 
     const OPEN_AI_KEY = process.env.OPEN_AI_KEY;
     if (!OPEN_AI_KEY) {
-      console.error('❌ OPEN_AI_KEY is missing!');
-      return NextResponse.json({ error: 'OPEN_AI_KEY not configured' }, { status: 500 });
+      console.error('❌ OPEN_AI_KEY is missing in environment variables!');
+      return NextResponse.json({ error: 'OPEN_AI_KEY not configured on server' }, { status: 500 });
     }
 
     // Step 1: Audio → Szöveg konverzió OpenAI Whisper API-val
@@ -38,6 +42,11 @@ export async function POST(request: NextRequest) {
     formData.append('model', WHISPER_MODEL);
     formData.append('language', 'hu'); // Magyar nyelv
 
+    console.log('📤 FormData created:');
+    console.log('  - file:', `audio.${audioFormat}`);
+    console.log('  - model:', WHISPER_MODEL);
+    console.log('  - language: hu');
+
     const audioResponse = await fetch(OPENAI_WHISPER_URL, {
       method: 'POST',
       headers: {
@@ -46,28 +55,28 @@ export async function POST(request: NextRequest) {
       body: formData
     });
 
+    console.log('📥 Whisper API response status:', audioResponse.status);
+
     if (!audioResponse.ok) {
       const errorText = await audioResponse.text();
-      console.error('OpenAI Whisper error:', errorText);
-      return NextResponse.json({ error: 'Audio processing failed' }, { status: 500 });
+      console.error('❌ OpenAI Whisper error:', errorText);
+      return NextResponse.json({ error: `Audio processing failed: ${audioResponse.status}` }, { status: 500 });
     }
 
     const audioData_result = await audioResponse.json();
     const transcribedText = audioData_result.text || '';
 
     if (!transcribedText.trim()) {
+      console.error('❌ Whisper returned empty text');
       return NextResponse.json({ error: 'Could not transcribe audio' }, { status: 500 });
     }
 
     console.log('✅ Audio transcribed by Whisper:', transcribedText);
 
-    // Step 2: Átadjuk a transcribed szöveget a Chat API-nak
-    // Automatikus környezet felismerés
-    const hostname = request.headers.get('host') || 'localhost:3000';
-    const protocol = hostname.includes('localhost') ? 'http' : 'https';
-    const CHAT_API_URL = `${protocol}://${hostname}/api/chat`;
+    // Step 2: Átadjuk a transcribed szöveget a Chat API-nak (Agent backend)
+    const CHAT_API_URL = 'https://api.mobilien.app/api/chat';
     
-    console.log('📤 Sending transcribed text to Chat API:', CHAT_API_URL);
+    console.log('🔗 Sending transcribed text to Chat API:', CHAT_API_URL);
 
     const chatResponse = await fetch(CHAT_API_URL, {
       method: 'POST',
@@ -80,10 +89,12 @@ export async function POST(request: NextRequest) {
       })
     });
 
+    console.log('📥 Chat API response status:', chatResponse.status);
+
     if (!chatResponse.ok) {
       const errorText = await chatResponse.text();
-      console.error('Chat API error:', errorText);
-      return NextResponse.json({ error: 'Chat API failed' }, { status: 500 });
+      console.error('❌ Chat API error:', errorText);
+      return NextResponse.json({ error: `Chat API failed: ${chatResponse.status}` }, { status: 500 });
     }
 
     const chatData = await chatResponse.json();
