@@ -187,7 +187,7 @@ export default function Home() {
         <div className="relative overflow-hidden h-full">
           <img src="/4.jpg" alt="Hero" className="block w-full h-full object-cover" style={{ objectPosition: 'center top' }} />
           <div className="absolute inset-0 bg-gradient-to-tr from-[#0C1D32]/80 via-[#0C1D32]/40 to-transparent"></div>
-          <div className="absolute inset-0 flex justify-start items-start pt-4 md:pt-12">
+          <div className="absolute inset-0 flex justify-start items-start pt-4 md:pt-8">
             <div className="w-full pl-9 pr-9 md:pl-[54px] md:pr-[54px]">
               {/* Desktop: Original content */}
               <div className="hidden md:block">
@@ -196,7 +196,7 @@ export default function Home() {
                   EV Töltő Megoldás
                 </h1>
               </div>
-              <div className="hidden md:grid md:grid-cols-3 gap-8 lg:gap-12 mt-24">
+              <div className="hidden md:grid md:grid-cols-3 gap-8 lg:gap-12 mt-36">
                 <div className="text-white">
                   <h3 className="text-lg md:text-xl font-semibold mb-2">Töltőkeresés egyszerűen</h3>
                   <p className="text-white/90 text-sm md:text-base max-w-sm">Egy alkalmazás, amely összeköti Önt Magyarország összes EV töltőállomásával.</p>
