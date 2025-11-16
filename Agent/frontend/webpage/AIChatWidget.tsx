@@ -474,8 +474,8 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
       const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
       setAudioLevel(average);
       
-      // Csend detektálás (threshold: 10)
-      if (average > 10) {
+      // Csend detektálás (threshold: 15 - csökkentett érzékenység)
+      if (average > 15) {
         lastSoundTime = Date.now();
         // Töröljük a csend timer-t ha beszélünk
         if (silenceTimerRef.current) {
@@ -487,6 +487,7 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
         const silenceDuration = Date.now() - lastSoundTime;
         if (silenceDuration > 3000 && !silenceTimerRef.current) {
           // Automatikus stop indítása
+          console.log('🔴 3 seconds silence detected, auto-stopping...');
           silenceTimerRef.current = setTimeout(() => {
             autoStopRecording();
           }, 0);
@@ -556,11 +557,13 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
   };
 
   const autoStopRecording = async () => {
+    console.log('🔴 Auto-stopping: Red flash starting...');
     // Piros villogás fél másodpercig
     setIsAutoStopping(true);
     
     await new Promise(resolve => setTimeout(resolve, 500));
     
+    console.log('⏹️ Auto-stopping: Stopping recording now...');
     // Stop recording
     stopRecording();
   };
@@ -864,8 +867,12 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
                         {/* Audio waveform visualization */}
                         <div className="absolute inset-0 flex items-center justify-center gap-0.5">
                           {[...Array(5)].map((_, i) => {
-                            // Szimmetrikus piramis: 1=0.6, 2=0.8, 3=1.0, 4=0.8, 5=0.6
-                            const heightMultipliers = [0.6, 0.8, 1.0, 0.8, 0.6];
+                            // Szimmetrikus piramis: base magasság + audio reaktív rész
+                            const baseHeights = [30, 45, 60, 45, 30]; // Fix base (%)
+                            const audioMultipliers = [0.3, 0.4, 0.5, 0.4, 0.3]; // Audio reaktív
+                            const dynamicHeight = Math.min(30, (audioLevel / 255) * 100 * audioMultipliers[i]);
+                            const totalHeight = baseHeights[i] + dynamicHeight;
+                            
                             return (
                               <div
                                 key={i}
@@ -873,7 +880,7 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
                                   isAutoStopping ? 'bg-red-500' : 'bg-blue-500'
                                 }`}
                                 style={{
-                                  height: `${Math.max(20, Math.min(80, audioLevel * heightMultipliers[i]))}%`,
+                                  height: `${totalHeight}%`,
                                   animation: 'pulse 0.8s ease-in-out infinite',
                                   animationDelay: `${i * 0.1}s`
                                 }}
