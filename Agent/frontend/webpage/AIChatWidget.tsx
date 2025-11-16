@@ -262,11 +262,64 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
   };
 
   const sendTranscribedText = async (text: string) => {
-    setInputValue(text);
-    // Kis delay után küldés
-    setTimeout(() => {
-      sendMessage();
-    }, 100);
+    // Automatikus küldés a transcribed text-tel
+    if (!text.trim() || isLoading) return;
+
+    // Expand chat when sending message
+    setIsExpanded(true);
+
+    // Add user message
+    const userMessage: Message = { 
+      role: "user", 
+      content: text,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue("");
+    setIsLoading(true);
+    setErrorMsg("");
+
+    try {
+      // Automatikus környezet felismerés
+      let API_URL = process.env.NEXT_PUBLIC_API_URL || 
+        (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+          ? 'http://localhost:3000' 
+          : 'https://api.mobilien.app');
+      
+      API_URL = API_URL.replace(/\/$/, '');
+      
+      const response = await fetch(`${API_URL}/api/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          message: text,
+          sessionId: sessionId || undefined 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.sessionId && !sessionId) {
+        setSessionId(data.sessionId);
+        localStorage.setItem('chat-session-id', data.sessionId);
+      }
+      
+      const aiMessage: Message = { 
+        role: "assistant", 
+        content: data.reply || "Sajnálom, nem tudok válaszolni.",
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      setErrorMsg("Hiba történt a kérés közben. Kérlek, próbáld újra.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const sendAudioToWhisper = async (audioBlob: Blob) => {
