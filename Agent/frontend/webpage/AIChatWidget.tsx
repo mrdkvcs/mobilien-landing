@@ -863,19 +863,23 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
                       >
                         {/* Audio waveform visualization */}
                         <div className="absolute inset-0 flex items-center justify-center gap-0.5">
-                          {[...Array(5)].map((_, i) => (
-                            <div
-                              key={i}
-                              className={`w-0.5 rounded-full transition-all ${
-                                isAutoStopping ? 'bg-red-500' : 'bg-blue-500'
-                              }`}
-                              style={{
-                                height: `${Math.max(20, Math.min(80, audioLevel * (0.5 + i * 0.1)))}%`,
-                                animation: 'pulse 0.8s ease-in-out infinite',
-                                animationDelay: `${i * 0.1}s`
-                              }}
-                            />
-                          ))}
+                          {[...Array(5)].map((_, i) => {
+                            // Szimmetrikus piramis: 1=0.6, 2=0.8, 3=1.0, 4=0.8, 5=0.6
+                            const heightMultipliers = [0.6, 0.8, 1.0, 0.8, 0.6];
+                            return (
+                              <div
+                                key={i}
+                                className={`w-0.5 rounded-full transition-all ${
+                                  isAutoStopping ? 'bg-red-500' : 'bg-blue-500'
+                                }`}
+                                style={{
+                                  height: `${Math.max(20, Math.min(80, audioLevel * heightMultipliers[i]))}%`,
+                                  animation: 'pulse 0.8s ease-in-out infinite',
+                                  animationDelay: `${i * 0.1}s`
+                                }}
+                              />
+                            );
+                          })}
                         </div>
                       </button>
                     ) : (
