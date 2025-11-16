@@ -162,6 +162,8 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
 
     try {
       if (hasFiles) {
+        console.log('📎 Sending files:', attachedFiles.length);
+        
         // Fájlok base64-re konvertálása
         const fileData = await Promise.all(
           attachedFiles.map(async (file) => ({
@@ -171,6 +173,8 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
             data: await fileToBase64(file)
           }))
         );
+        
+        console.log('📎 Files converted to base64:', fileData.map(f => `${f.name} (${f.size} bytes)`));
         
         // Küldés a file-chat endpoint-ra (relatív URL - Next.js API route)
         const response = await fetch(`/api/file-chat`, {
@@ -183,11 +187,16 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
           }),
         });
 
+        console.log('📥 File-chat response status:', response.status);
+
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
+          const errorData = await response.json();
+          console.error('❌ File-chat error:', errorData);
+          throw new Error(errorData.error || `HTTP ${response.status}`);
         }
 
         const data = await response.json();
+        console.log('✅ File-chat response received');
         
         // Store session ID if this is the first message
         if (data.sessionId && !sessionId) {
