@@ -1,8 +1,8 @@
 // OpenRouter API Configuration
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
-console.log('[config] Loading configuration from Agent/.env');
+console.log('[config] Loading configuration from .env (project root)');
 
 const config = {
   // OpenRouter API settings

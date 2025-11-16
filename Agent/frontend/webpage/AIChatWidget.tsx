@@ -155,15 +155,6 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
     setErrorMsg("");
 
     try {
-      // Automatikus környezet felismerés
-      let API_URL = process.env.NEXT_PUBLIC_API_URL || 
-        (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
-          ? 'http://localhost:3000' 
-          : 'https://api.mobilien.app');
-      
-      // Remove trailing slash if exists
-      API_URL = API_URL.replace(/\/$/, '');
-      
       if (hasFiles) {
         // Fájlok base64-re konvertálása
         const fileData = await Promise.all(
@@ -175,8 +166,8 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
           }))
         );
         
-        // Küldés a file-chat endpoint-ra
-        const response = await fetch(`${API_URL}/api/file-chat`, {
+        // Küldés a file-chat endpoint-ra (relatív URL - Next.js API route)
+        const response = await fetch(`/api/file-chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
@@ -210,7 +201,14 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
         // Fájlok törlése küldés után
         setAttachedFiles([]);
       } else {
-        // Normál szöveges üzenet
+        // Normál szöveges üzenet (Agent backend Express szerver)
+        let API_URL = process.env.NEXT_PUBLIC_API_URL || 
+          (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000' 
+            : 'https://api.mobilien.app');
+        
+        API_URL = API_URL.replace(/\/$/, '');
+        
         const response = await fetch(`${API_URL}/api/chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -280,7 +278,7 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
     setErrorMsg("");
 
     try {
-      // Automatikus környezet felismerés
+      // Agent backend Express szerver
       let API_URL = process.env.NEXT_PUBLIC_API_URL || 
         (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
           ? 'http://localhost:3000' 
@@ -345,16 +343,9 @@ export default function AIChatWidget({ isExpanded, setIsExpanded }: AIChatWidget
       } else if (audioBlob.type.includes('wav')) {
         audioFormat = 'wav';
       }
-
-      // Automatikus környezet felismerés
-      let API_URL = process.env.NEXT_PUBLIC_API_URL || 
-        (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
-          ? 'http://localhost:3000' 
-          : 'https://api.mobilien.app');
       
-      API_URL = API_URL.replace(/\/$/, '');
-      
-      const response = await fetch(`${API_URL}/api/audio-chat`, {
+      // Next.js API route (relatív URL)
+      const response = await fetch(`/api/audio-chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

@@ -22,7 +22,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hu">
-      <head>
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+        <CookieBanner />
+        
         {/* Eruda Debug Console for iOS/Mobile Testing */}
         <script
           dangerouslySetInnerHTML={{
@@ -46,17 +56,6 @@ export default function RootLayout({
             `,
           }}
         />
-      </head>
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-        <CookieBanner />
       </body>
     </html>
   );
