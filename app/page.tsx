@@ -183,7 +183,7 @@ export default function Home() {
       </ScrollHeader>
 
       {/* Hero Section - Full-width image with overlay content, no spacing */}
-      <section className="relative m-0 p-0 h-[400px] md:h-[575px]">
+      <section className="relative m-0 p-0 h-[400px] md:h-[575px] pt-16">
         <div className="relative overflow-hidden h-full">
           <img src="/4.jpg" alt="Hero" className="block w-full h-full object-cover" style={{ objectPosition: 'center top' }} />
           <div className="absolute inset-0 bg-gradient-to-tr from-[#0C1D32]/80 via-[#0C1D32]/40 to-transparent"></div>

@@ -90,7 +90,7 @@ export default function ContactPage() {
         </div>
       </ScrollHeader>
 
-      <main className="min-h-screen" style={{ background: "linear-gradient(180deg,#F9FAFB, #FFFFFF)" }}>
+      <main className="min-h-screen pt-16" style={{ background: "linear-gradient(180deg,#F9FAFB, #FFFFFF)" }}>
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4">
             <div className="mx-auto w-full max-w-[720px]">

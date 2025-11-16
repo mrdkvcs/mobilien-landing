@@ -107,7 +107,7 @@ export default function RolunkPage() {
       </ScrollHeader>
 
       {/* Rólunk tartalom */}
-      <main className="container mx-auto py-20 px-4 flex-1 flex flex-col items-center justify-center">
+      <main className="container mx-auto py-20 px-4 flex-1 flex flex-col items-center justify-center pt-16">
         <h1 className="text-4xl font-bold mb-6">Rólunk</h1>
           <p className="text-[#0C1D32]/80 max-w-4xl mx-auto mb-0.1 text-center leading-relaxed text-base md:text-lg">
           A Mobilien csapata elkötelezett a fenntartható közlekedés és az elektromos autózás népszerűsítése mellett. Célunk, hogy mindenki számára elérhetővé tegyük a legmodernebb EV megoldásokat, és segítsük ügyfeleinket a zöldebb jövő felé vezető úton.
